@@ -61,6 +61,7 @@ export default function DesktopelevenRowOne() {
                     };
 
                     console.log("Login successful:", userInfo);
+                    localStorage.setItem('user-info', JSON.stringify(userInfo));
 
                     // Navigate to another route
                     navigate('/seventeen');
@@ -74,6 +75,8 @@ export default function DesktopelevenRowOne() {
                     };
 
                     console.log("Registration successful:", userInfo);
+
+
 
                     // Navigate to another route
                     navigate('/login');  // Change to your registration success path
@@ -101,6 +104,8 @@ export default function DesktopelevenRowOne() {
                 email: user.email,
             };
             console.log("Google Sign-In successful:", userInfo);
+
+            localStorage.setItem('user-info', JSON.stringify(userInfo));
 
             // Navigate to another route
             navigate('/seventeen');

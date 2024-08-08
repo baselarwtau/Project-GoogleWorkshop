@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Img, Heading } from "../..";
+import { Button, Img, Heading } from "../index";
 
 export default function ProductProfile2({
                                             productName = "Green Dinosaur Fluffy Toy - Collectible",

@@ -1,6 +1,8 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Button, Input, Heading, DatePicker, TextArea } from "../../components";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
 
 export default function DesktopTwentyThreePage() {
     return (
@@ -9,9 +11,10 @@ export default function DesktopTwentyThreePage() {
                 <title>GiftFlow's Application</title>
                 <meta name="description" content="Web site created using create-react-app" />
             </Helmet>
+            <Header className="bg-white-a700 shadow-lg"/>
             <div className="flex w-full flex-col items-center bg-white-a700 py-[82px] md:py-5">
                 <div className="container-xs mb-1 flex flex-col items-center gap-16 px-14 md:px-5 sm:gap-8">
-                    <Heading size="heading7xl" as="h1" className="mr-[308px] self-end !font-bold md:mr-0">
+                    <Heading size="heading7xl" as="h1" className="!font-bold">
                         Create Invite
                     </Heading>
                     <div className="flex w-[80%] justify-center md:w-full">
@@ -43,7 +46,7 @@ export default function DesktopTwentyThreePage() {
                                     </Heading>
                                     <DatePicker
                                         name="solarcalendarbo"
-                                        className="flex gap-[34px] self-stretch rounded-[18px] bg-white-a700 py-5 pr-6 shadow-md sm:pr-5"
+                                        className="flex gap-[34px] pl-5 self-stretch rounded-[18px] bg-white-a700 py-5 pr-6 shadow-md sm:pr-5"
                                     />
                                 </div>
                                 <div className="flex flex-col items-start gap-2.5">
@@ -62,7 +65,7 @@ export default function DesktopTwentyThreePage() {
                     </div>
                     <div className="flex gap-7">
                         <a href="https://www.youtube.com/embed/bv8FxkOsz7I" target="_blank" rel="noopener noreferrer">
-                            <Button color="black_900" size="4xl" shape="round" className="min-w-[332px] font-bold">
+                            <Button color="black_900" size="4xl" shape="round" className="min-w-[332px] h-[66px] font-bold">
                                 Create Invite
                             </Button>
                         </a>
@@ -70,13 +73,14 @@ export default function DesktopTwentyThreePage() {
                             color="white_A700"
                             size="4xl"
                             shape="round"
-                            className="min-w-[142px] border border-solid border-black-900 font-bold"
+                            className="min-w-[142px] h-[66px] border border-solid border-black-900 font-bold"
                         >
                             Cancel
                         </Button>
                     </div>
                 </div>
             </div>
+            <Footer className="self-stretch"/>
         </>
     );
 }
