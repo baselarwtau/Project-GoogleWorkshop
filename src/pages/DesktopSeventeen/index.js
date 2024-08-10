@@ -5,9 +5,10 @@ import Footer from "../../components/Footer";
 import ProductCard from "../../components/ProductCard";
 import DesktopSeventeenColumnGift from "./DesktopSeventeenColumnGift";
 import DesktopSeventeenRowOne from "./DesktopSeventeenRowOne";
-import React, { Suspense, useState } from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import { TabPanel, Tabs } from "react-tabs";
 import Header from "../../components/Header";
+import {useNavigate} from "react-router-dom";
 
 
 const data = [
@@ -70,6 +71,30 @@ const dropDownOptions = [
 export default function DesktopSeventeenPage() {
     const [searchBarValue, setSearchBarValue] = useState("");
 
+
+
+    const navigate = useNavigate();
+
+    const getUserFromLocalStorage = () => {
+        const userInfo = localStorage.getItem('user-info');
+        return userInfo ? JSON.parse(userInfo) : null;
+    };
+
+    useEffect(() => {
+        const user = getUserFromLocalStorage();
+
+        if (!user) {
+            // If user is not found, redirect to the login page
+            console.log("User not authenticated, redirecting to login...");
+            navigate('/login');
+        } else {
+            // Optionally handle authenticated state here
+            console.log("User authenticated:", user);
+        }
+    }, [navigate]); // Adding navigate as a dependency ensures that the hook re-runs if navigate changes
+
+
+
     return (
         <>
             <Helmet>
@@ -78,72 +103,15 @@ export default function DesktopSeventeenPage() {
             </Helmet>
             <Header className="bg-white-a700 shadow-lg" />
             <div className="flex w-full flex-col items-center gap-[98px] bg-white-a700 md:gap-[73px] sm:gap-[49px]">
-                <div className="container-xs mt-[38px] md:px-5">
-                  {/*  <header className="bg-white-a700 shadow-lg">
-                        <div className="flex items-center justify-between gap-5 md:flex-col">
-                            <Img
-                                src="images/img_header_logo.png"
-                                alt="Headerlogo"
-                                className="h-[86px] w-[306px] object-contain"
-                            />
-                            <div className="flex items-center gap-[22px] sm:flex-col">
-                                <ul className="flex flex-wrap gap-[22px]">
-                                    <li>
-                                        <a href="#">
-                                            <Text as="p">Home</Text>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <Text as="p">Products</Text>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <Text as="p">My Children</Text>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <Text as="p">About</Text>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <Button
-                                    shape="round"
-                                    rightIcon={
-                                        <Img
-                                            src="images/img_streamlineaitechnologysparksolid.svg"
-                                            alt="Streamline:ai-technology-spark-solid"
-                                            className="h-[18px] w-[18px]"
-                                        />
-                                    }
-                                    className="min-w-[162px] gap-3 font-quicksand"
-                                >
-                                    AI Assist
-                                </Button>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <Img
-                                    src="images/img_ellipse_3.png"
-                                    alt="Image"
-                                    className="h-[54px] w-[54px] rounded-[26px] object-cover"
-                                />
-                                <Heading size="headings" as="h6" className="!font-quicksand">
-                                    Jessica
-                                </Heading>
-                            </div>
-                        </div>
-                    </header>*/}
-                </div>
+
                 <div className="flex flex-col  self-stretch  ">
                     <Tabs
                         className="flex flex-col items-center"
                         selectedTabClassName=""
                         selectedTabPanelClassName="px-1.5 !relative tab-panel--selected"
                     >
-                        <DesktopSeventeenRowOne />
-                        <DesktopSeventeenColumnGift />
+                        <DesktopSeventeenRowOne  navigate={navigate} />
+                        <DesktopSeventeenColumnGift  />
                         <div className="container-xs mt-[60px] md:px-5">
                             {Array(4).map((_, index) => (
                                 <TabPanel key={`tab-panel-${index}`} className="absolute items-center px-1.5">

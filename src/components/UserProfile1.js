@@ -4,8 +4,11 @@ import React from "react";
 export default function UserProfile1({
                                          userName = "Mike • 14",
                                          userBirthday = "04/10",
+    obj,
+
                                          ...props
                                      }) {
+
     return (
         <div
             {...props}
@@ -13,17 +16,17 @@ export default function UserProfile1({
         >
             <div className="relative h-[138px] w-[68%]">
                 <Img
-                    src="images/img_ellipse_4_138x138.png"
+                    src={obj?.picture}
                     alt="Mikefourteen"
                     className="absolute bottom-0 left-0 right-0 top-0 m-auto h-[138px] w-full rounded-[68px] object-cover"
                 />
             </div>
             <div className="flex flex-col items-center">
                 <Heading size="heading4xl" as="h3" className="!font-semibold !text-white-a700">
-                    {userName}
+                    {obj?.name}
                 </Heading>
                 <Heading size="heading6xl" as="h6" className="!font-semibold !text-white-a700">
-                    {userBirthday}
+                    {obj?.dob}
                 </Heading>
             </div>
         </div>

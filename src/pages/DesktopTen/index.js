@@ -5,6 +5,7 @@ import Header from "../../components/Header"; // Removed space in import path
 import DesktoptenRow from "./DesktoptenRow";
 import DesktoptenRowone from "./DesktoptenRowOne"; // Fixed space in import path
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 const dropDownOptions = [
     { label: "Option1", value: "option1" },
@@ -13,6 +14,9 @@ const dropDownOptions = [
 ];
 
 export default function DesktopTenPage() {
+    const location = useLocation();
+    const receivedData = location.state; // Access the entire object
+
     return (
         <>
             <Helmet>
@@ -46,7 +50,7 @@ export default function DesktopTenPage() {
                                 />
                             </div>
                         </div>
-                        <DesktoptenRowone /> {/* Fixed case sensitivity */}
+                        <DesktoptenRowone ansers={receivedData} /> {/* Fixed case sensitivity */}
                     </div>
                     <Footer className="mt-[30px] self-stretch" />
                 </div>

@@ -22,8 +22,8 @@ export default function DesktopFourRowOne() {
     };
 
     return (
-        <div className="flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
-            <div className="w-full px-4 md:px-5 mb-[68px]">
+        <div className=" flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
+            <div className="myClass w-full px-4 md:px-5 mb-[68px]">
                 <div className="w-[600px]">
                     <div className="flex flex-col mb-8">
                         <div className="flex flex-col items-start mb-6">

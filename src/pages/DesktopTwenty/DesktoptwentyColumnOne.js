@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Button, TextArea, Heading, Input, Img } from "../../components";
 import UserProfile2 from "../../components/UserProfile2";
-import {  ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase/firebase";
-import { useChild } from "../../context/ChildContext"; // Ensure your Firebase config is correctly imported
-
-//const storage = getStorage(app);
+import { useChild } from "../../context/ChildContext";
+import {useNavigate} from "react-router-dom"; // Ensure your Firebase config is correctly imported
 
 export default function DesktoptwentyColumnOne() {
     const { childrenData, addChild, updateChild, deleteChild, loading } = useChild();
+    const navigate = useNavigate();  // React Router's useNavigate hook for navigation
+
     const [formData, setFormData] = useState({
         childName: "",
         dob: "",
@@ -18,6 +19,7 @@ export default function DesktoptwentyColumnOne() {
         weekendActivities: "",
         bookType: "",
         additionalDetails: "",
+        gender: "",  // New state for gender
     });
 
     // Function to handle input changes
@@ -74,20 +76,81 @@ export default function DesktoptwentyColumnOne() {
         }
     };
 
-    // Function to handle form submission
+// Function to handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("Form Data:", formData);
-        // You can now send formData to your other API
 
-        await addChild(formData);
+        // Format the form data into the desired structure
+        const formattedData = {
+            name: formData.childName,
+            gender: formData.gender.toLowerCase(), // Ensure gender is in lowercase
+            dob: formData.dob,
+            picture: formData.picture || "",
+            questions: [
+                {
+                    question: "What kinds of games does he like to play the most?",
+                    answer: formData.gamesInterest,
+                    options: [
+                        "Board games",
+                        "Outdoor games",
+                        "Technology games (such as game consoles or computer games)",
+                        "Puzzle building and challenge tests",
+                    ],
+                },
+                {
+                    question: "What are your child's favorite movies or series?",
+                    answer: formData.movieGenre,
+                    options: [
+                        "Animated movies",
+                        "Action series",
+                        "Dramas",
+                        "Comedies",
+                    ],
+                },
+                {
+                    question:
+                        "How does he like to spend time during vacations or on weekends?",
+                    answer: formData.weekendActivities,
+                    options: [
+                        "Outdoor activities like hiking or sports",
+                        "Arts and crafts",
+                        "Indoor games and activities",
+                        "Watching movies or TV series at home",
+                    ],
+                },
+                {
+                    question: "What types of books does he like to read?",
+                    answer: formData.bookType,
+                    options: [
+                        "Fantasy",
+                        "Science fiction",
+                        "Thriller and adventure books",
+                        "Educational and mentoring books",
+                    ],
+                },
+                {
+                    question: "Is there something important for us to know?",
+                    answer: formData.additionalDetails,
+                    options: [],
+                },
+            ],
+        };
 
+        console.log("Formatted Data:", formattedData);
+
+        // You can now send formattedData to your API or save it
+        await addChild(formattedData);
+        // Navigate to another route
+        navigate('/seventeen');
     };
 
     return (
         <div className="flex flex-col items-center self-stretch">
             <div className="container-xs flex flex-col items-center px-14 md:px-5">
                 <form onSubmit={handleSubmit} className="w-full">
+
+
+
                     <div className="flex items-start self-stretch md:flex-col">
                         <div className="mt-6 flex flex-1 gap-[34px] md:flex-col md:self-stretch">
                             <div className="flex w-[46%] flex-col items-start gap-2.5 md:w-full">
@@ -146,6 +209,24 @@ export default function DesktoptwentyColumnOne() {
                             <Heading size="headings" as="h4" className="mr-[22px] md:mr-0">
                                 Add Picture
                             </Heading>
+                        </div>
+                    </div>
+
+                    {/* New Gender Question */}
+                    <div className="form-section mt-[34px]">
+                        <Heading size="headingxs" as="h3" className="!text-gray-800">
+                            What is your child's gender?
+                        </Heading>
+                        <div className="flex flex-col gap-4 mt-4">
+                            {["Male", "Female"].map((gender, index) => (
+                                <UserProfile2
+                                    key={index}
+                                    userAnimatedText={gender}
+                                    isChecked={formData.gender === gender}
+                                    onChange={() => handleRadioChange("gender", gender)}
+                                    isForm={true}
+                                />
+                            ))}
                         </div>
                     </div>
 
@@ -237,7 +318,7 @@ export default function DesktoptwentyColumnOne() {
                         />
                     </div>
 
-                    <div className="mt-[52px] flex  save-buttons min-w-[290px] h-[66px]">
+                    <div className="mt-[52px] flex save-buttons min-w-[290px] h-[66px]">
                         <Button
                             type="submit"
                             color="black_900"

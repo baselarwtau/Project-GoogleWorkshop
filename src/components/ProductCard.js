@@ -6,6 +6,11 @@ export default function ProductCard({
                                         productName = "Green Dinosaur Fluffy Toy - Collectible",
                                         productPrice = "$12.99",
                                         saveButton = "Saved",
+                                        isChildGifts= false,
+                                        ToggleLIke,
+                                        isLiked,
+
+
                                         ...props
                                     }) {
     return (
@@ -23,10 +28,17 @@ export default function ProductCard({
                     {productPrice}
                 </Heading>
                 <Button
+                    onClick={()=>{
+                        ToggleLIke();
+                    }}
                     shape="round"
                     rightIcon={
-                        <Img
-                            src="images/img_mdiheart.svg"
+                      isChildGifts? <Img
+                          src={isLiked? "images/red-heart-icon.svg" :  "images/img_mdiheart.svg"}
+                          alt="Mdi:heart"
+                          className="h-[24px] w-[24px]"
+                      /> :  <Img
+                            src="images/delete.svg"
                             alt="Mdi:heart"
                             className="h-[24px] w-[24px]"
                         />

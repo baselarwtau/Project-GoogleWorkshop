@@ -1,8 +1,10 @@
 import {Button, Img, Text} from "./index";
 import {Heading} from './Heading';
 import React from "react";
+import {Link, useNavigate} from "react-router-dom";
 
 export default function Header({...props}) {
+    const navigate = useNavigate();
     return (
         <header
             {...props}
@@ -27,17 +29,20 @@ export default function Header({...props}) {
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <Link to="/seventeen">
                                 <Text as="p">My Children</Text>
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a href="#">
+                            <Link to="/about">
                                 <Text as="p">About</Text>
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                     <Button
+                        onClick={()=>{
+                            navigate('/assest');
+                        }}
                         shape="round"
                         rightIcon={
                             <Img

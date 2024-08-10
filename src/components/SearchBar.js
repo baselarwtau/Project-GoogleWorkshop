@@ -2,8 +2,10 @@
 
 import React from "react";
 import {Img} from "./Img";
+import {useNavigate} from "react-router-dom";
 
-const SearchBar = ( {isDeggestion=false}) => {
+const SearchBar = ( {isDeggestion=false, child }) => {
+    const navigate = useNavigate();
     if(isDeggestion){
         return (
             <div className="flex items-center p-4">
@@ -82,7 +84,11 @@ const SearchBar = ( {isDeggestion=false}) => {
                 </div>
 
                 {/* Add Gift Button */}
-                <button className="px-6 py-2 min-w-[229px] h-[66px] text-white bg-yellow-400 ml-auto rounded hover:bg-yellow-300 focus:outline-none">
+                <button
+                    onClick={() => {
+                        navigate('/addGifts');
+                    }}
+                    className="px-6 py-2 min-w-[229px] h-[66px] text-white bg-yellow-400 ml-auto rounded hover:bg-yellow-300 focus:outline-none">
                     + Add Gift
                 </button>
             </div>

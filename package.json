@@ -10,6 +10,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.3",
     "firebase": "^10.12.5",
+    "lodash": "^4.17.21",
     "postcss": "^8.4.40",
     "postcss-nesting": "^13.0.0",
     "prop-types": "^15.8.1",

@@ -15,6 +15,7 @@ export const ChildProvider = ({ children }) => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [selectedChildId, setSelectedChildId] = useState(null);
 
   const getUserFromLocalStorage = () => {
     const userInfo = localStorage.getItem('user-info');
@@ -52,12 +53,16 @@ export const ChildProvider = ({ children }) => {
 
   const addChild = async (child) => {
     const user = getUserFromLocalStorage();
+    console.log('user', user);
     if (!user) return;
 
+
     const childWithUserId = { ...child, userId: user.uid };
+    console.log('childtoAdd', childWithUserId);
     const docRef = await addDoc(collection(firestore, 'children'), childWithUserId);
-    
+
     const newChildrenData = [...childrenData, { id: docRef.id, ...childWithUserId }];
+    console.log('New Children Data', newChildrenData);
     setChildrenData(newChildrenData);
     saveChildrenDataToLocalStorage(newChildrenData);
 
@@ -81,8 +86,13 @@ export const ChildProvider = ({ children }) => {
     saveChildrenDataToLocalStorage(newChildrenData);
   };
 
+  // Function to select a child by ID
+  const selectChild = (id) => {
+    setSelectedChildId(id);
+  };
+
   return (
-    <ChildContext.Provider value={{ childrenData, addChild, updateChild, deleteChild, loading }}>
+    <ChildContext.Provider value={{  childrenData, addChild, updateChild, deleteChild, loading, selectChild, selectedChildId }}>
       {children}
     </ChildContext.Provider>
   );
