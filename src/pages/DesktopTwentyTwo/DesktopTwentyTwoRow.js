@@ -1,9 +1,44 @@
 import { Button, Text, Heading, Img } from "../../components";
 import React from "react";
 
+
+const getGoogleCalendarLink = (name, date, time, place, description = "") => {
+    if (!name || !date || !time || !place) return "";
+
+    const eventDate = new Date(date);
+    const eventStart = new Date(`${eventDate.toISOString().split("T")[0]}T${time}:00`);
+    const eventEnd = new Date(eventStart.getTime() + 2 * 60 * 60 * 1000); // Assuming 2 hours event duration
+
+    const start = eventStart.toISOString().replace(/-|:|\.\d+Z/g, "").replace("T", "T");
+    const end = eventEnd.toISOString().replace(/-|:|\.\d+Z/g, "").replace("T", "T");
+
+    const googleCalendarBase = "https://calendar.google.com/calendar/render?action=TEMPLATE";
+    const details = `Event: ${name} - Birthday Party\nLocation: ${place}`;
+    const eventDescription = description ? `Details: ${description}` : "";
+
+    return `${googleCalendarBase}&text=${encodeURIComponent(name)}&dates=${start}/${end}&details=${encodeURIComponent(details + " " + eventDescription)}&location=${encodeURIComponent(place)}`;
+};
+
 export default function DesktoptwentytwoRow(
     { invitation }
 ) {
+
+
+
+    const handleAddToCalendar = () => {
+        const link = getGoogleCalendarLink(
+            invitation.title,
+            invitation.date,
+            invitation.time,
+            invitation.location,
+            invitation.description
+        );
+
+        console.log('link to open',link);
+
+        // Open the link in a new tab
+        window.open(link, '_blank');
+    };
 
     const handleCopyLink = () => {
         const currentUrl = window.location.href;
@@ -35,13 +70,15 @@ export default function DesktoptwentytwoRow(
         return `${formattedDate.replace(/,/, '').split(',')[0]} at ${timeString}!`;
     }
 
+    console.log('invitation',invitation);
+
     if (invitation) {
         return (
             <div className="flex justify-center self-stretch">
                 <div className="container-xs flex justify-center px-2 md:px-5">
                     <div className="flex w-full flex-col items-center">
                         <Img
-                            src="images/img_ellipse_6_330x330.png"
+                            src={invitation?.selectedChildId.picture ? invitation?.selectedChildId?.picture : "images/img_ellipse_6_330x330.png"}
                             alt="Image"
                             className="relative z-[2] h-[330px] w-[330px] rounded-[164px] object-cover"
                         />
@@ -70,8 +107,9 @@ export default function DesktoptwentytwoRow(
                                             <Text size="text3xl" as="p" className="relative z-[1] !font-cheesesauce">
                                                 to
                                             </Text>
-                                            <Text size="text7xl" as="p" className="relative mt-[8px] !font-cheesesauce">
-                                                • {invitation?.title}
+                                            <Text size="text7xl" as="p" className="relative mt-[8px]  CheeseSauce">
+                                                🎉 {invitation?.title} 🎉
+
                                             </Text>
                                         </div>
                                         <Heading size="heading10xl" as="h1" className="mt-3.5">
@@ -85,7 +123,9 @@ export default function DesktoptwentytwoRow(
                                 <Text size="text3xl" as="p">
                                     {invitation?.description}
                                 </Text>
-                                <Button color="white_A700" size="xl" shape="round" className="min-w-[310px] font-quicksand font-bold">
+                                <Button
+                                    onClick={handleAddToCalendar}
+                                    color="white_A700" size="xl" shape="round" className="min-w-[310px] font-quicksand font-bold">
                                     Add to Google Calendar
                                 </Button>
                             </div>

@@ -10,6 +10,7 @@ export default function DesktopelevenRowOne() {
     const [password, setPassword] = useState("");  // State for password input
     const [error, setError] = useState('');  // State for error handling
     const navigate = useNavigate();  // React Router's useNavigate hook for navigation
+    const [selectedIndex, setSelectedIndex] = useState(1);
 
     // Handle email input change
     const handleEmailChange = (e) => {
@@ -94,7 +95,8 @@ export default function DesktopelevenRowOne() {
     );
 
     // Handle Google Sign-In
-    const handleGoogleSignIn = async () => {
+    const handleGoogleSignIn = async (e) => {
+        e.preventDefault(); // Prevent form submission
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
@@ -115,10 +117,19 @@ export default function DesktopelevenRowOne() {
         }
     };
 
+    const handleTabSelect = useCallback((index) => {
+
+        setSelectedIndex(index);
+
+    }, []);
+
+
     return (
         <div className="mb-[76px] flex justify-center">
             <div className="container-xs flex justify-center px-14 md:px-5">
                 <Tabs
+                    selectedIndex={selectedIndex}
+                    onSelect={handleTabSelect}
                     className="flex w-[66%] flex-col gap-[50px] rounded-[30px] bg-white-a700 md:w-full"
                     selectedTabClassName="!text-white-a700 border-black-900 border border-solid bg-black-900
                     rounded-bl-[0px] rounded-br-[0px] rounded-tl-[30px] rounded-tr-[0px]"

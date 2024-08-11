@@ -13,3 +13,22 @@
     font-family: "Quicksand";
     font-weight: 700;
 }
+
+@font-face {
+    font-display: swap;
+    font-style: normal;
+    src: url("/public/fonts/CheeseSauce.otf") format("truetype");
+    font-family: "CheeseSauces";
+    font-weight: 700;
+}
+@font-face {
+    font-display: swap;
+    font-style: normal;
+    src: url("/public/fonts/CheeseSauce.ttf") format("truetype");
+    font-family: "CheeseSauce";
+    font-weight: 700;
+}
+
+.CheeseSauce {
+    font-family: 'CheeseSauces' !important;
+}

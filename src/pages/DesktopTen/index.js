@@ -42,7 +42,7 @@ export default function DesktopTenPage() {
                                 </Button>
                                 <SelectBox
                                     shape="round"
-                                    indicator={<Img src="images/img_checkmark.svg" alt="Checkmark" className="h-[28px] w-[34px]" />}
+                                    indicator={<Img src="images/oui_token-range.svg" alt="Checkmark" className="h-[66px] w-[34px]" />}
                                     name="checkmark"
                                     placeholder="Category"
                                     options={dropDownOptions}

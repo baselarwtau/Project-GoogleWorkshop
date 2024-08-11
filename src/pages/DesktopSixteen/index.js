@@ -5,12 +5,13 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { storage } from "../../firebase/firebase"; // Firebase config import
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useChild} from "../../context/ChildContext";
 
 export default function DesktopSixteenPage() {
 
     const { childrenData, addChild, updateChild, deleteChild, selectChild, selectedChildId } = useChild();
+    const navigate = useNavigate();
 
     // State for form inputs
     const [formData, setFormData] = useState({
@@ -124,7 +125,10 @@ export default function DesktopSixteenPage() {
 
                 // Update the child with the new gift
                 await updateChild(selectedChildId.id, selectedChildId);
-                alert("Gift has been added sucessfully");
+                navigate('/children?giftadded=1');
+
+              //  alert("Gift has been added sucessfully");
+
             } else {
                 alert("Gift with this name already exists.");
             }
@@ -233,7 +237,7 @@ export default function DesktopSixteenPage() {
                                         className="min-w-[208px] rounded-[18px] h-[66px] font-bold shadow-md"
                                         onClick={handleButtonClick} // Trigger file input click
                                     >
-                                        + Upload Image
+                                        {formData.imageFile? 'image selected' : '+ Upload Image'}
                                     </Button>
                                 </div>
                             </div>
@@ -249,7 +253,7 @@ export default function DesktopSixteenPage() {
                             type="submit" // Ensure this button submits the form
                             form="giftForm" // Attach this button to the form with ID "giftForm"
                         >
-                            Save Changes
+                            submit
                         </Button>
                         <Button
                             color="white_A700"

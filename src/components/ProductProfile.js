@@ -1,21 +1,30 @@
-import React from "react";
-import { Button, Img, Heading } from "./index";
-
+import React, {useState} from "react";
+import { Button, Img, Heading, Text } from "./index";
+import * as Icon from "react-icons/fi";
+import Checkbox from "react-custom-checkbox";
 export default function ProductProfile({
                                            productName = "Green Dinosaur Fluffy Toy - Collectible",
                                            productPrice = "$12.99",
                                            saveButtonText = "Save",
                                             productImage="images/img_rectangle_17.png",
+                                            isInvitation= false,
 
                                            ...props
                                        }) {
+    const [isChecked, setIsChecked] = useState(false);
+
+    // Function to handle checkbox change
+    const handleCheckboxChange = (event) => {
+        setIsChecked(event.target.checked);
+    };
+
     return (
         <div
             {...props}
             className={`flex flex-col items-center w-full bg-white-a700 shadow-xs rounded-[30px] ${props.className}`}
         >
             <Img
-                src={productImage}
+                src={productImage? productImage : "images/img_rectangle_17.png"}
                 alt="Product Image"
                 className="h-[236px] w-full rounded-[30px] object-cover"
             />
@@ -27,7 +36,7 @@ export default function ProductProfile({
                     {productPrice}
                 </Heading>
             </div>
-         {/*   <Button
+            {/*   <Button
                 shape="round"
                 rightIcon={
                     <Img
@@ -40,6 +49,21 @@ export default function ProductProfile({
             >
                 {saveButtonText}
             </Button>*/}
+        {isInvitation?    <div className="flex items-center space-x-4 p-4 w-full justify-end">
+                <div className="flex items-center rounded-2xl p-4 cursor-pointer space-x-2 bg-amber-300 w-[120px]">
+                    <Text>{isChecked? 'Checked' : 'Check'}</Text>
+                    <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                        className="form-checkbox h-5 w-5 text-blue-600"
+                    />
+
+                </div>
+
+            </div>: null}
+
+
         </div>
     );
 }

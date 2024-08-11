@@ -27,7 +27,7 @@ export default function DesktopOnePage() {
                     </Text>
                 </div>
                 <div className="container-xs relative z-[2] flex flex-col items-center px-[50px] md:px-5">
-                    <Heading size="heading8x1" as="h2">
+                    <Heading  className=" leading-[68px] md:w-full m-auto" as="h3" as="h2">
                         How does it work?
                     </Heading>
                     <div className="mt-4 self-stretch rounded-[42px] bg-amber-200_01 p-5">
@@ -37,8 +37,8 @@ export default function DesktopOnePage() {
                             <UserProfile userName={3} img={"images/How_works_3.svg"} userDescription={"Click the link to purchase the gift from one of our trusted partner websites."}  className="mb-1.5 mt-3.5 w-[36%] gap-4 md:my-0 md:w-full" />
                         </div>
                     </div>
-                    <div className="ml-[186px] mr-[182px] mt-9 flex flex-col items-center gap-[62px] self-stretch md:mx-0 sm:gap-[31px]">
-                        <Heading size="heading7xl" as="h3">
+                    <div className="ml-[186px] mr-[182px] mt-9 flex flex-col items-center justify-center gap-[62px] self-stretch md:mx-0 sm:gap-[31px]">
+                        <Heading className="leading-[68px] md:w-full m-auto" as="h3">
                             Our Partners
                         </Heading>
                         <div className="flex self-stretch md:flex-col">
@@ -58,7 +58,9 @@ export default function DesktopOnePage() {
                         </div>
                     </div>
                     <DesktoponeColumnpexelspho />
+                 {/*
                     <DesktoponeRowFour />
+                    */}
                 </div>
                 <Footer className="mt-[30px] self-stretch" />
             </div>

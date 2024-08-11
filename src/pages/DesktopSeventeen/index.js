@@ -8,7 +8,7 @@ import DesktopSeventeenRowOne from "./DesktopSeventeenRowOne";
 import React, {Suspense, useEffect, useState} from "react";
 import { TabPanel, Tabs } from "react-tabs";
 import Header from "../../components/Header";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useChild} from "../../context/ChildContext";
 
 

@@ -2,6 +2,8 @@ import ProductProfile from "../../components/ProductProfile";
 import React, {Suspense, useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import productsData from '../../assets/products.json';
+import {ThreeCircles} from "react-loader-spinner";
+import {Text} from "../../components";
 
 
 export default function DesktoptenRowOne({ansers = {}}) {
@@ -63,7 +65,20 @@ export default function DesktoptenRowOne({ansers = {}}) {
         <div className="flex justify-center self-stretch">
             <div className="container-xs flex justify-center md:px-5">
                     {isLoading ? (
-                        <div>A I is thinking. Please wait...</div>
+                        <div className=" flex justify-center items-center flex-col">
+                            <ThreeCircles
+                                visible={true}
+                                height="100"
+                                width="100"
+                                color="#4fa94d"
+                                ariaLabel="three-circles-loading"
+                                wrapperStyle={{}}
+                                wrapperClass=""
+                            />
+                            <Text size="textxl" as="p" className="leading-[29px] md:w-full mt-16">
+                                A I is thinking. Please wait...
+                            </Text>
+                        </div>
                     ) : (
                         <div className="grid w-full grid-cols-4 gap-[30px] gap-y-[30px] px-1.5 md:grid-cols-2 sm:grid-cols-1">
 

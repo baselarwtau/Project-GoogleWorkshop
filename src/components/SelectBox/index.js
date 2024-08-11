@@ -1,6 +1,7 @@
 import React from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
+import "../../styles/select.css";
 
 const shapes = {
     round: "rounded-[18px]",
@@ -29,6 +30,7 @@ const SelectBox = React.forwardRef(
             variant = "fill",
             size = "xs",
             color = "white_A700",
+            onChange,
             ...restProps
         },
         ref
@@ -36,8 +38,10 @@ const SelectBox = React.forwardRef(
         return (
             <Select
                 ref={ref}
+                onChange={onChange}
                 options={options}
-                className={`${className} ${shape && shapes[shape] || ''} ${size && sizes[size] || ''} ${variant && variants[variant]?.[color] || ''}`}
+                style={{padding: 0}}
+                className={` myCustomClass ${className} ${shape && shapes[shape] || ''} ${size && sizes[size] || ''} ${variant && variants[variant]?.[color] || ''}`}
                 isSearchable={isSearchable}
                 isMulti={isMulti}
                 components={{

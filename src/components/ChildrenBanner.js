@@ -2,95 +2,124 @@ import React from 'react';
 import {Img} from "./Img";
 import {Heading} from "./Heading";
 import {Text} from "./Text";
+import {Button} from "./Button";
+import {useChild} from "../context/ChildContext";
 
+const calculateAge = (birthDateString) => {
+    // Convert the input string to a Date object
+    const birthDate = new Date(birthDateString);
+    const today = new Date(); // Current date
 
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    const dayDifference = today.getDate() - birthDate.getDate();
+
+    // Adjust age if the birthdate hasn't occurred yet this year
+    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+        age--;
+    }
+
+    return age;
+};
 const ChildrenBanner = props => {
+    const {childrenData, addChild, updateChild, deleteChild, selectChild, selectedChildId} = useChild();
+    console.log('children about', selectedChildId);
+
+    let picture = 'images/img_ellipse_4_138x138.png' ;
+    let gender = 'male';
+    let name = 'Mike';
+    let dob = '04/10/2010';
+    if(selectedChildId){
+        gender = selectedChildId?.gender;
+        name = selectedChildId?.name;
+        dob = selectedChildId?.dob;
+    }
+
+    if(selectedChildId?.picture  ){
+        picture = selectedChildId?.picture;
+
+    }else if(selectedChildId?.gender === 'male' ){
+        picture = 'images/img_ellipse_4_138x138.png';
+    }else {
+        picture = 'images/img_image_1.png';
+    }
+
+ async function confirmDelete (  ) {
+        const confirm = window.confirm("Are you sure you want to delete?");
+
+        if (confirm) {
+            // User clicked "OK"
+            await deleteChild (selectedChildId?.id);
+            console.log("Deleting...");
+            // Your delete logic here
+        } else {
+            // User clicked "Cancel"
+            console.log("Deletion canceled.");
+        }
+    };
+
+    const deleteSelectedChild = () => {
+       if(selectedChildId){
+           return(
+               <Button
+                   onClick={ async ()=>{
+                       await confirmDelete();
+                   }}
+                   color="black_900"
+                   size="lg"
+                   shape="round"
+                   className=" min-w-[231px] h-[66px]"
+                   type="submit"  // Submit button
+               >
+                   Delet Child
+               </Button>
+           );
+       }
+    }
+
     return (
         <div className="rounded-[30px] border border-solid border-black-900 bg-white-a700 p-6 sm:p-5">
             <div className="flex items-center md:flex-col">
                 <div className="mb-2.5 flex-1 md:self-stretch">
-                    <div className="flex flex-col gap-7">
-                        <div className="flex items-center gap-5">
+                    <div className="flex md:flex-col justify-start items-center gap-7">
+                        <div className="flex items-baseline  gap-5">
                             <Img
-                                src="images/img_ellipse_4_138x138.png"
+                                src={picture}
                                 alt="Image"
                                 className="h-[90px] w-[90px] rounded-[44px] object-cover"
                             />
                             <Heading as="h3" className="self-end">
-                                Mike
+                                {name}
                             </Heading>
                         </div>
-                        <div>
-                            <div className="flex flex-col gap-1.5">
-                                <div className="flex items-center md:flex-col">
-                                    <div className="flex items-start justify-center gap-[22px] md:w-full">
-                                        <Img
-                                            src="images/ion_calendar.svg"
-                                            alt="Ion"
-                                            className="h-[48px] w-[48px]"
-                                        />
-                                        <Heading size="heading2xl" as="h4" className="self-center leading-7">
-                                            14 years old
-                                            <br/>
-                                            <span className="text-[17px]">Born 04/10/2010</span>
-                                        </Heading>
-                                    </div>
-                                    <div
-                                        className="flex flex-1 items-start justify-center gap-[17px] px-7 md:self-stretch sm:flex-col sm:px-5">
-                                        <Img
-                                            src="images/img_ic_round-interests.svg"
-                                            alt="Icround"
-                                            className="h-[54px] w-[54px] sm:w-full"
-                                        />
-                                        <Text
-                                            size="textxs"
-                                            as="p"
-                                            className="w-[74%] self-end leading-[22px] sm:w-full sm:self-auto"
-                                        >
-                                            Outdoor activities, Strategy games, Action movies, Fantasy books
-                                        </Text>
-                                    </div>
-                                </div>
-                                <div className="flex items-start justify-center sm:flex-col">
-                                    <div className="flex items-center gap-[21px]">
-                                        <Img
-                                            src="images/img_icons8_gender.svg"
-                                            alt="Icons & gender"
-                                            className="h-[52px] w-[52px]"
-                                        />
-                                        <Heading size="heading2xl" as="h5">
-                                            Male
-                                        </Heading>
-                                    </div>
-                                    <div
-                                        className="flex flex-1 items-start gap-[19px] self-center pl-[72px] pr-14 md:px-5 sm:self-stretch">
-                                        <Img
-                                            src="images/img_icon-park-solid_sport.svg"
-                                            alt="Icon parks solid"
-                                            className="h-[48px] w-[48px]"
-                                        />
-                                        <Text
-                                            size="textxs"
-                                            as="p"
-                                            className="mt-1 w-[54%] self-end leading-[22px]"
-                                        >
-                                            Biking, Building forts, Imaginative quests
-                                        </Text>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="flex items-baseline   ml-10 gap-[22px] md:w-full">
+                            <Img
+                                src="images/ion_calendar.svg"
+                                alt="Ion"
+                                className="w-[48px]"
+                            />
+                            <Heading size="heading2xl" as="h4" className="self-center leading-7">
+                                {calculateAge(dob)} years old
+                                <br/>
+                                <span className="text-[17px]">Born {dob}</span>
+                            </Heading>
                         </div>
+
+                        <div className="flex items-baseline  ml-10 gap-[21px]  md:w-full">
+                            <Img
+                                src="images/img_icons8_gender.svg"
+                                alt="Icons & gender"
+                                className="h-[52px] w-[52px]"
+                            />
+                            <Heading size="heading2xl" as="h5">
+                                {gender}
+                            </Heading>
+                        </div>
+
                     </div>
                 </div>
-                <div className="flex w-[40%] flex-col items-start gap-3 self-end md:w-full md:self-auto">
-                    <Heading size="heading2xl" as="h6">
-                        About
-                    </Heading>
-                    <Text size="textxl" as="p" className="w-full leading-[29px]">
-                        Mike is an adventurous 14-year-old who loves outdoor activities and exploring new things. He
-                        enjoys playing strategy games, watching action-packed movies, and reading fantasy books. His
-                        weekends are filled with biking, building forts, and embarking on imaginative quests.
-                    </Text>
+                <div className="flex w-[25%] ml-auto flex-col justify-end items-end gap-3 md:w-full md:self-auto">
+                 {  deleteSelectedChild() }
                 </div>
             </div>
         </div>

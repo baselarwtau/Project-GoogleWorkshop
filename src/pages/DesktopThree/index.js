@@ -5,6 +5,11 @@ import { Button, Heading, Img, Text, TextArea } from "../../components";
 import { useNavigate } from "react-router-dom";
 import UserProfile2 from "../../components/UserProfile2";
 
+const datathree = [
+    { userDescription: "male", id: "male" },
+    { userDescription: "female", id: "female" },
+
+];
 const datafour = [
     { userAnimatedText: "1-5 years", id: "years4" },
     { userAnimatedText: "5-10 years", id: "years5" },
@@ -54,33 +59,38 @@ export default function DesktopThreePage() {
         let updatedData;
         switch (Active) {
             case 1:
-                updatedData = getSelectedData(datafour, id).userAnimatedText;
+                updatedData = getSelectedData(datathree, id).userDescription;
                 console.log('Updated Value for question-1:', updatedData);
                 setFormData(prevState => ({...prevState, 'question-1': updatedData}));
                 break;
             case 2:
-                updatedData = getSelectedData(datafive, id).userAnimatedText;
-                console.log('Updated Value for question-2:', updatedData);
+                updatedData = getSelectedData(datafour, id).userAnimatedText;
+                console.log('Updated Value for question-1:', updatedData);
                 setFormData(prevState => ({...prevState, 'question-2': updatedData}));
                 break;
             case 3:
-                updatedData = getSelectedData(datasix, id).userAnimatedText;
-                console.log('Updated Value for question-3:', updatedData);
+                updatedData = getSelectedData(datafive, id).userAnimatedText;
+                console.log('Updated Value for question-2:', updatedData);
                 setFormData(prevState => ({...prevState, 'question-3': updatedData}));
                 break;
             case 4:
-                updatedData = getSelectedData(dataseven, id).userAnimatedText;
-                console.log('Updated Value for question-4:', updatedData);
+                updatedData = getSelectedData(datasix, id).userAnimatedText;
+                console.log('Updated Value for question-3:', updatedData);
                 setFormData(prevState => ({...prevState, 'question-4': updatedData}));
                 break;
             case 5:
-                updatedData = getSelectedData(dataEight, id).userDescription;
-                console.log('Updated Value for question-5:', updatedData);
+                updatedData = getSelectedData(dataseven, id).userAnimatedText;
+                console.log('Updated Value for question-4:', updatedData);
                 setFormData(prevState => ({...prevState, 'question-5': updatedData}));
                 break;
             case 6:
+                updatedData = getSelectedData(dataEight, id).userDescription;
+                console.log('Updated Value for question-5:', updatedData);
+                setFormData(prevState => ({...prevState, 'question-6': updatedData}));
+                break;
+            case 7:
                 console.log('Updated Value for question-6:', inputText);
-                setFormData(prevState => ({...prevState, 'question-6': inputText}));
+                setFormData(prevState => ({...prevState, 'question-7': inputText}));
                 break;
             default:
                 console.log('Invalid Active value:', Active);
@@ -93,34 +103,41 @@ export default function DesktopThreePage() {
     };
 
     let selectedData = {};
+
+
+
+
+
     const handleSubmit = () => {
-
-
-
-        if (Active < 6) {
-            setActive(Active + 1)
+        if (Active < 7) {
+            setActive(Active + 1);
         }
 
-
-
-const obj = {
+        const obj = {
             ...formData,
-}
+        };
 
-        if (inputText.length > 0) {
+        // If it's the last step (step 6) and the user has entered text, add it to the object
+        if (Active === 7 && inputText.length > 0) {
             obj['question-6'] = inputText;
-
-            navigate('/result', { state: obj });
-
-
         }
 
-
+        // If it's the last step, navigate to the result page
+        if (Active === 7) {
+            navigate('/result', { state: obj });
+        }
 
         console.log("Form data before redirect:", obj);
-
-
     };
+
+
+
+
+
+
+
+
+
 
     const handleSkip = () => {
         console.log("Skip button clicked");
@@ -186,6 +203,57 @@ const obj = {
                             <div className="flex flex-col mb-8">
                                 <div className="flex flex-col items-start mb-6">
                                     <Heading size="headingxs" as="h1" className="!text-white-a700">
+                                        {Active}/7
+                                    </Heading>
+                                    <Heading as="h2" className="mt-[10px] w-full !text-white-a700">
+                                       What gender is the child?
+                                    </Heading>
+                                </div>
+                                <Text
+                                    size="textxl"
+                                    as="p"
+                                    className="w-full leading-[29px] !text-white-a700"
+                                >
+                                    We ask for the child's gender to ensure we recommend gender-appropriate gifts that match
+                                    their developmental stage and interests.
+                                </Text>
+                            </div>
+
+                            {/* Radio button list */}
+                            <div className="flex flex-col gap-4 mt-8">
+                                {datathree.map((item) => (
+                                    <UserProfile2
+                                        key={item.id}
+                                        userAnimatedText={item.userDescription}
+                                        isChecked={selectedValue === item.id}
+                                        onChange={() => handleOptionClick(item.id)}
+                                    />
+                                ))}
+                            </div>
+
+                            {/* Button Section */}
+                            <div className="mt-[62px] flex gap-[19px]">
+                                <Button
+                                    size="xl"
+                                    shape="round"
+                                    className="min-w-[210px] font-medium"
+                                    onClick={handleSubmit}
+                                >
+                                    Next
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                : null}
+
+            {Active === 2 ? <div
+                    className=" flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
+                    <div className="myClass w-full px-4 md:px-5 mb-[68px]">
+                        <div className="w-[600px]">
+                            <div className="flex flex-col mb-8">
+                                <div className="flex flex-col items-start mb-6">
+                                    <Heading size="headingxs" as="h1" className="!text-white-a700">
                                         {Active}/6
                                     </Heading>
                                     <Heading as="h2" className="mt-[10px] w-full !text-white-a700">
@@ -230,7 +298,7 @@ const obj = {
                 </div>
                 : null}
 
-            {Active === 2 ? <div
+            {Active === 3 ? <div
                     className="flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
                     <div className="w-full px-4 md:px-5 mb-[68px]">
                         <div className="w-[600px]">
@@ -289,7 +357,7 @@ const obj = {
                 </div>
                 : null}
 
-            {Active === 3 ? <div
+            {Active === 4 ? <div
                     className="flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
                     <div className="w-full px-4 md:px-5 mb-[68px]">
                         <div className="w-[600px]">
@@ -348,7 +416,7 @@ const obj = {
                 </div>
                 : null}
 
-            {Active === 4 ? <div
+            {Active === 5 ? <div
                     className="flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
                     <div className="w-full px-4 md:px-5 mb-[68px]">
                         <div className="w-[600px]">
@@ -407,7 +475,7 @@ const obj = {
                 </div>
                 : null}
 
-            {Active === 5 ? <div
+            {Active === 6 ? <div
                     className="flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
                     <div className="w-full px-4 md:px-5 mb-[68px]">
                         <div className="w-[600px]">
@@ -466,7 +534,7 @@ const obj = {
                 </div>
                 : null}
 
-            {Active === 6 ? <div
+            {Active === 7 ? <div
                     className="flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
                     <div className="w-full px-4 md:px-5 mb-[68px]">
                         <div className="w-[600px]">
@@ -520,7 +588,7 @@ const obj = {
                 </div>
                 : null}
 
-            {Active === 7 ? <div
+            {Active === 8 ? <div
                     className="flex h-[858px] items-start justify-start self-stretch bg-[url('/public/images/img_group_31.png')] bg-cover bg-no-repeat py-[60px] md:h-auto md:py-5">
                     <div className="w-full px-4 md:px-5 mb-[68px]">
                         <div className="w-[600px]">

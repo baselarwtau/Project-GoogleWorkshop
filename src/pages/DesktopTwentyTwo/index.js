@@ -1,6 +1,6 @@
-import React, {Suspense, useEffect, useState} from "react";
+import React, {Suspense, useCallback, useEffect, useMemo, useState} from "react";
 import {Helmet} from "react-helmet";
-import {Button, Text, Img, Heading} from "../../components";
+import {Button, Text, Img, Heading, SelectBox,} from "../../components";
 import DesktoptwentytwoRow from "./DesktopTwentyTwoRow";
 import ProductProfile2 from "../../components/ProductProfile2";
 import Header from "../../components/Header";
@@ -11,6 +11,7 @@ import {useChild} from "../../context/ChildContext";
 import axios from "axios";
 import productsData from "../../assets/products.json";
 import ProductProfile from "../../components/ProductProfile";
+import '../../styles/font.css';
 
 
 const data = [
@@ -20,6 +21,16 @@ const data = [
     {productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saved: "Saved"},
 ];
 
+const dropDownOptions = [
+    {label: "Select", value: ""},
+    {value: "0-50", label: "Less then $50"},
+    {value: "51-100", label: "Between $50 and $100"},
+    {value: "101-150", label: "Between $100 and $150"},
+
+];
+
+
+
 export default function DesktopTwentyTwoPage() {
 
     const queryString = window.location.search;
@@ -27,6 +38,71 @@ export default function DesktopTwentyTwoPage() {
     const invite = urlParams.get('invite');
     const [invitation, setInvitation] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [summary, setSummary] = useState('The Summary for child will like.');
+
+    const [selectedPriceRange, setSelectedPriceRange] = useState();
+    const [filteredList, setFilteredList] = useState([]);
+
+    const handlePriceRangeChange = (event) => {
+
+        setSelectedPriceRange(event.value);
+    };
+
+
+    useEffect(() => {
+        if (invitation && invitation?.selectedChildId?.gifts) {
+            const filtered = invitation?.selectedChildId?.gifts.filter((item) => {
+                const price = parseFloat(item.price.replace("$", ""));
+
+                if (isNaN(price)) {
+                    return false; // Skip items with invalid price
+                }
+
+                switch (selectedPriceRange) {
+                    case "0-50":
+                        return price >= 0 && price <= 50;
+                    case "51-100":
+                        return price > 50 && price <= 100;
+                    case "101-200":
+                        return price > 100 && price <= 200;
+                    case "201-500":
+                        return price > 200 && price <= 500;
+                    case "500+":
+                        return price > 500;
+                    default:
+                        return true;
+                }
+            });
+            setFilteredList(filtered);
+        }
+    }, [selectedPriceRange, invitation]);
+
+
+    const extractAnswers = useCallback((data) => {
+        const answers = {};
+
+        if (data) {
+            data.questions.forEach((question, index) => {
+                const questionKey = `question-${index + 1}`;
+                answers[questionKey] = question.answer;
+            });
+        }
+
+        return answers;
+    }, []);
+
+
+    const axiosOptions = useMemo(() => ({
+        withCredentials: true,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }), []);
+
+
+    const answers = useMemo(() => extractAnswers(invitation?.selectedChildId), [invitation?.selectedChildId, extractAnswers]);
+
+
 
     useEffect(() => {
         const fetchInvite = async () => {
@@ -40,6 +116,17 @@ export default function DesktopTwentyTwoPage() {
                    const data = inviteSnapshot.data();
                    console.log(data?.selectedChildId?.gifts);
                    setInvitation(data);
+
+
+                   const summary = await axios.post(
+                       'http://localhost:4001/summary',
+                       answers,
+                       axiosOptions
+                   );
+
+
+                   setSummary(summary.data.summary);
+
                } else {
                    setInvitation(null);
                    console.log('No such document!');
@@ -80,44 +167,47 @@ export default function DesktopTwentyTwoPage() {
                                     as="p"
                                     className="relative px-[6.5%] flex-1 text-center leading-[43px] md:ml-0 md:self-stretch"
                                 >
-                                    {invitation?.description}
+                                    {summary}
                                 </Text>
                                 {/*  <Heading size="heading6xl" as="h2" className="mx-auto mb-0 mt-16">
                                     Mike's Gift List
                                 </Heading>*/}
                                 <div className="relative ml-[22px] mr-[62px] content-end md:mx-0 md:h-auto">
                                     <div className="flex h-max flex-1 items-center md:relative md:flex-col">
-                                        <Button
-                                            color="white_A700"
-                                            size="3xl"
-                                            rightIcon={
-                                                <Img
-                                                    src="images/img_ouitokenrange.svg"
-                                                    alt="Oui: token range"
-                                                    className="h-[66px] w-[26px]"
-                                                />
+                                        <SelectBox
+                                            shape="round"
+                                            indicator={
+                                                <Img src="images/img_ouitokenrange.svg" alt="Oui: token-range"
+                                                     className="h-[66px] w-[26px]"/>
                                             }
-                                            className="min-w-[222px] gap-[34px] self-end rounded-[18px] !text-black-900_7f shadow-md md:self-auto"
-                                        >
-                                            Price Range
-                                        </Button>
+                                            name="price"
+                                            placeholder="Price Range"
+                                            options={dropDownOptions}
+                                            onChange={handlePriceRangeChange}
+                                            className="w-[40%] pr-4 sm:w-full rounded-[22px]"
+                                        />
                                     </div>
                                 </div>
-                                <div className="flex gap-[30px] px-1.5 md:flex-col">
+                                <div className="grid grid-cols-4 md:grid-cols-4 gap-[30px] px-1.5">
                                     <Suspense fallback={<div>Loading feed...</div>}>
-                                        {invitation?.selectedChildId?.gifts.map((product, index) => (
-
+                                        {filteredList.map((product, index) => (
                                             <ProductProfile
                                                 key={"desktop" + index}
-                                            productPrice={product.price}
-                                        productName={product.name}
-                                        productImage={product.image}
-                                        productId={product.id}
-
-                                    />
+                                                productPrice={product.price}
+                                                productName={product.name}
+                                                productImage={product.image}
+                                                productId={product.id}
+                                                isInvitation={true}
+                                            />
+                                        ))}
+                                        {/* Adding empty divs to fill in the remaining grid spots if there are less than 4 products */}
+                                        {Array.from({length: 4 - (invitation?.selectedChildId?.gifts.length % 4)}).map((_, index) => (
+                                            <div key={"placeholder" + index} className="invisible"></div>
                                         ))}
                                     </Suspense>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>

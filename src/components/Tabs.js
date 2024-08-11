@@ -12,6 +12,7 @@ import {useChild} from '../context/ChildContext'; // Import custom styles
 import productsData from '../assets/products.json';
 import axios from 'axios';
 import _ from 'lodash';
+import {useNavigate, useParams} from "react-router-dom";
 
 const CustomTabs = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -23,8 +24,20 @@ const CustomTabs = () => {
     const [categoryFilter, setCatFilter] = useState([]);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [summary, setSummary] = useState('The Summary for child will like.');
+    const [filtring, setfiltring] = useState(false);
+    const navigate = useNavigate();
 
-    //  console.log('selectedIndex', selectedIndex);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const added = urlParams.get('giftadded');
+
+    console.log('gift', added);
+
+    useEffect(() => {
+        setSelectedIndex(1);
+    }, [added]);
+
 
     const {childrenData, addChild, updateChild, deleteChild, selectChild, selectedChildId} = useChild();
 
@@ -117,6 +130,17 @@ const CustomTabs = () => {
                     axiosOptions
                 );
 
+                const summary = await axios.post(
+                    'http://localhost:4001/summary',
+                    answers,
+                    axiosOptions
+                );
+
+             //   console.log( summary.data.summary);
+
+
+                setSummary(summary.data.summary);
+
                 // Extract and clean the suggested product IDs
                 const suggestedProductIds = response.data.suggestedProductIds
                     .split(',')
@@ -127,7 +151,7 @@ const CustomTabs = () => {
                     suggestedProductIds.includes(product.id.toString())
                 );
 
-                console.log('A.I Products', filteredProducts);
+              //  console.log('A.I Products', filteredProducts);
 
                 const cats = [];
                 for (let i = 0; i < filteredProducts?.length; i++) {
@@ -189,6 +213,7 @@ const CustomTabs = () => {
 
     // Memoize onSelect handler
     const handleTabSelect = useCallback((index) => {
+        setfiltring(false);
         setSelectedIndex(index);
         if (index === 1) {
             const cats = [];
@@ -218,28 +243,77 @@ const CustomTabs = () => {
     };
 
     const filterProductsByPrice = (priceCategory, dataProducts) => {
+        console.log(priceCategory);
+const pro = [];
         switch (priceCategory) {
-            case 'low':
-                return dataProducts
-                    .filter(product => parseFloat(product.price) < 20)
-                    .sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-            case 'medium':
-                return dataProducts.filter(product => parseFloat(product.price) >= 20 && parseFloat(product.price) <= 50);
-            case 'high':
-                return dataProducts
-                    .filter(product => parseFloat(product.price) > 50)
-                    .sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+            case '50':
+                for (let i = 0; i < dataProducts?.length; i++) {
+                    const price = Number(dataProducts[i]?.price);
+                    if (typeof price === 'number' && price < 50) {
+                        pro.push(dataProducts[i]);
+                    }
+                }
+                return pro;
+            case '100':
+                console.log('Reacehd the case');
+                for (let i = 0; i < dataProducts?.length; i++) {
+                    const price = Number(dataProducts[i]?.price);
+                    console.log({
+                        price,
+                        isValid: price > 50 && price < 100
+                    })
+                    if (typeof price === 'number' && price > 50 && price < 100) {
+                        pro.push(dataProducts[i]);
+                    }
+                }
+                console.log(pro)
+                return pro;
+            case '150':
+                for (let i = 0; i < dataProducts?.length; i++) {
+                    const price = Number(dataProducts[i]?.price);
+                    if (typeof price === 'number' && price > 100 && price < 150) {
+                        pro.push(dataProducts[i]);
+                    }
+                }
+                return pro;
+            case '151':
+                for (let i = 0; i < dataProducts?.length; i++) {
+                    const price = Number(dataProducts[i]?.price);
+                    if (typeof price === 'number' && price > 150) {
+                        pro.push(dataProducts[i]);
+                    }
+                }
+                return pro;
             default:
-                return products;
+                return [];
         }
     };
+
+
+
+    /* const filterProductsByPrice = (priceCategory, dataProducts) => {
+         switch (priceCategory) {
+             case '50':
+                 return dataProducts
+                     .filter(product => parseFloat(product.price) < 50)
+                     .sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+             case '100':
+                 return dataProducts.filter(product => parseFloat(product.price) >= 50 && parseFloat(product.price) <= 100);
+             case '150':
+                 return dataProducts.filter(product => parseFloat(product.price) >= 100 && parseFloat(product.price) <= 150);
+             case '151':
+                 return dataProducts.filter(product => parseFloat(product.price) >= 150);
+             default:
+                 return dataProducts;
+         }
+     };*/
 
 
     return (
         <Tabs selectedIndex={selectedIndex} onSelect={handleTabSelect}>
             <TabList className=" border  border-solid border-black-900 flex">
                 <Tab className="tab" selectedClassName="selected-tab">About</Tab>
-                <Tab className="tab" selectedClassName="selected-tab">Gift List {childCroducts?.length} </Tab>
+                <Tab className="tab"  selectedClassName="selected-tab">Gift List {childCroducts?.length} </Tab>
                 <Tab className="tab" selectedClassName="selected-tab">Suggestions 💡</Tab>
                 <Tab className="tab" selectedClassName="selected-tab">Child will like</Tab>
             </TabList>
@@ -252,44 +326,59 @@ const CustomTabs = () => {
                 <SearchBar
                     categories={categories}
                     onFilterCategory={(e) => {
+                        setfiltring(true)
                         const cat = e?.target?.value;
                         if (!cat) {
                             setCatFilter([]);
+                            setfiltring(false)
                             return;
                         }
                         if (cat?.length < 1) {
+                            setfiltring(false)
                             setCatFilter([]);
                             return;
                         }
                         const products = findProductsByCategory(cat, childCroducts);
+                        setfiltring(true)
                         setCatFilter(products);
                     }}
                     onFilterPrice={(e) => {
+
                         const price = e?.target?.value;
+
                         if (!price) {
+
                             setCatFilter([]);
+                            setfiltring(false)
                             return;
                         }
                         if (price?.length < 1) {
                             setCatFilter([]);
+                            setfiltring(false)
                             return;
                         }
                         const products = filterProductsByPrice(price, childCroducts);
+                        setfiltring(true)
+                        console.log('filteredProducts length is', products.length);
                         setCatFilter(products);
                     }}
                     onFilter={(e) => {
                         const term = e?.target?.value;
                         if (!term) {
                             setCatFilter([]);
+                            setfiltring(false)
                             return;
                         }
                         if (term?.length < 1) {
                             setCatFilter([]);
+                            setfiltring(false)
                             return;
                         }
                         const filteredProducts = childCroducts.filter(product =>
                             product.name.toLowerCase().includes(term)
                         );
+
+                        setfiltring(true)
                         setCatFilter(filteredProducts);
                     }}
                     child={selectedChildId}
@@ -298,13 +387,18 @@ const CustomTabs = () => {
                 {childCroducts.length > 0 ? < div
                         className="grid w-full grid-cols-4 gap-[30px] gap-y-[30px] px-1.5 md:grid-cols-2 sm:grid-cols-1">
 
-                        {(categoryFilter?.length > 0 ? categoryFilter : childCroducts).map((product) => (
-                            <div key={product.id} className="p-6 rounded">
+
+                        {filtring?  (categoryFilter).map((product) => (
+                            <div key={product.id} className="p-6 rounded container">
                                 <ProductCard
                                     productPrice={product.price}
                                     productName={product.name}
                                     productImage={product.image}
                                     productId={product.id}
+
+                                    saveButton={'delete'}
+
+
 
                                     ToggleLIke={async () => {
                                         console.log(product)
@@ -313,7 +407,26 @@ const CustomTabs = () => {
 
                                 />
                             </div>
-                        ))}
+                        )) :  null}
+
+                        {!filtring?  (childCroducts).map((product) => (
+                            <div key={product.id} className="p-6 rounded container">
+                                <ProductCard
+                                    productPrice={product.price}
+                                    productName={product.name}
+                                    productImage={product.image}
+                                    productId={product.id}
+
+                                    saveButton={'delete'}
+
+                                    ToggleLIke={async () => {
+                                        console.log(product)
+                                        await updateChildData(product, selectedChildId.id);
+                                    }}
+
+                                />
+                            </div>
+                        )) :  null}
 
                     </div> :
                     <div className="mt-16 mb-16">
@@ -329,12 +442,16 @@ const CustomTabs = () => {
                             </Text>
                             <div className="mx-12 flex justify-center gap-[34px] md:mx-0">
 
-                                <Button size="2xl" shape="round" className="min-w-[228px] h-[66px] font-semibold">
+                                <Button onClick={()=>{
+                                            navigate('/addGifts');
+                                }} size="2xl" shape="round" className="min-w-[228px] h-[66px] font-semibold">
                                     + Add Gift
                                 </Button>
 
 
-                                <Button size="2xl" shape="round" className="min-w-[352px] h-[66px] font-semibold">
+                                <Button onClick={()=>{
+                                   setSelectedIndex(2);
+                                }} size="2xl" shape="round" className="min-w-[352px] h-[66px] font-semibold">
                                     Browse Suggestions
                                 </Button>
 
@@ -396,6 +513,7 @@ const CustomTabs = () => {
                                     productId={product.id}
                                     isChildGifts={true}
                                     isLiked={product.isLiked}
+                                    isSuggestion={true}
                                     ToggleLIke={async () => {
                                         console.log(product.id)
                                         await updateChildData(product, selectedChildId.id);
@@ -413,9 +531,7 @@ const CustomTabs = () => {
                 <div
                     className="flex w-[70%] flex-col items-starty gap-3 self-center md:w-full md:self-auto m-auto mt-10">
                     <Text size="textxl" as="p" className="w-full leading-[29px] font-quicksand">
-                        Mike is an adventurous 14-year-old who loves outdoor activities and exploring new things. He
-                        enjoys playing strategy games, watching action-packed movies, and reading fantasy books. His
-                        weekends are filled with biking, building forts, and embarking on imaginative quests.
+                        {summary}
                     </Text>
                 </div>
             </TabPanel>

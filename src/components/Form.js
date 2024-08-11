@@ -6,11 +6,20 @@ import { Heading } from "./Heading";
 import { useChild } from "../context/ChildContext"; // Import Heading and Button
 
 const Form = () => {
-    const [gameInterest, setGameInterest] = useState(""); // New state for game interests
+
+
+
+    // New state for game interests
     const [favoriteGenre, setFavoriteGenre] = useState("");
     const [weekendActivity, setWeekendActivity] = useState("");
     const [bookType, setBookType] = useState("");
     const [additionalDetails, setAdditionalDetails] = useState("");
+
+    const [gameInterest, setGameInterest] = useState("");
+    const games = ["Video Games", "Board Games", "Puzzles", "Sports", "Other"];
+const genere = ["Animated", "Action & Adventure", "Drama", "Comedy", "Other"];
+const vocationActivity = ["Outdoor activities and sports", "Arts and crafts", "Indoor games and activities", "Movies and TV series", "Other"];
+const BooksArray = ["Fantasy books", "Science Fiction books", "Thriller and adventure books", "Educational and non-fiction books", "Other"];
 
     const [otherGameInterest, setOtherGameInterest] = useState(""); // State for "Other" game interest
     const [otherFavoriteGenre, setOtherFavoriteGenre] = useState(""); // State for "Other" favorite genre
@@ -26,15 +35,28 @@ const Form = () => {
                 switch (question.question) {
                     case "What kinds of games does he like to play the most?":
                         setGameInterest(question.answer);
+                        if(!games.includes(question.answer)) {
+                            setOtherGameInterest(question.answer);
+                        }
+
                         break;
                     case "What are your child's favorite movies or series?":
                         setFavoriteGenre(question.answer);
+                        if(!genere.includes(question.answer)) {
+                            setOtherFavoriteGenre(question.answer);
+                        }
                         break;
                     case "How does he like to spend time during vacations or on weekends?":
                         setWeekendActivity(question.answer);
+                        if(!vocationActivity.includes(question.answer)) {
+                            setOtherWeekendActivity(question.answer);
+                        }
                         break;
                     case "What types of books does he like to read?":
                         setBookType(question.answer);
+                        if(!BooksArray.includes(question.answer)) {
+                            setOtherBookType(question.answer);
+                        }
                         break;
                     case "Is there something important for us to know?":
                         setAdditionalDetails(question.answer);
@@ -45,7 +67,7 @@ const Form = () => {
             });
 
         } else {
-            alert('Please select a child first');
+           // alert('Please select a child first');
         }
 
     }, [selectedChildId]);
@@ -82,9 +104,10 @@ const Form = () => {
         // Call the updateChild function from the context (assuming it handles updates)
         if (selectedChildId?.id) {
             await updateChild(selectedChildId?.id, updatedChildData);
+            alert('The changes has been saved sucessfully');
             console.log('Child updated', selectedChildId);
         } else {
-            alert('Please select a Child First');
+           // alert('Please select a Child First');
         }
         // Clear form state after successful submission (optional)
       /*  setGameInterest("");
@@ -114,6 +137,8 @@ const Form = () => {
         console.log("Cancel button clicked");
     };
 
+
+
     return (
         <form onSubmit={handleSubmit} className="form-container">
             {/* New Question: Game Interests */}
@@ -122,11 +147,23 @@ const Form = () => {
                     1. What kind of games interests them?
                 </Heading>
                 <div className="flex flex-col gap-4 mt-4">
-                    {["Video Games", "Board Games", "Puzzles", "Sports", "Other"].map((game, index) => (
+                    {games.map((game, index) => {
+                 /*     let other = false;
+                      let shouldChecked = false;
+                      console.log(game);
+                       if(!games.includes(gameInterest) && game === 'Other'){
+                            other = true;
+                       }else if(games.includes(gameInterest) && game !== 'Other' && game === gameInterest) {
+                           other = true;
+                       }*/
+
+
+
+                        return (
                         <div key={index}>
                             <UserProfile2
                                 userAnimatedText={game}
-                                isChecked={gameInterest === game}
+                                isChecked={gameInterest === game || (game === 'Other' && !games.includes(gameInterest))}
                                 onChange={() => {
                                     if (game === 'Other') {
                                         setGameInterest(game);
@@ -137,11 +174,11 @@ const Form = () => {
                                 }}
                                 isForm={true} // Add isForm prop
                             />
-                            {game === 'Other' && gameInterest === 'Other' && (
+                            {game === 'Other' && (!games.includes(gameInterest) || gameInterest === 'Other')  && (
                                 <div className="undefined mt-4 border-2 border-gray-300 flex items-center gap-5 px-[18px] py-4 bg-white-a700 flex-1 rounded-[18px] cursor-pointer">
                                 <input
                                     type="text"
-                                    value={otherGameInterest}
+                                    value={ otherGameInterest}
                                     onChange={(e) => setOtherGameInterest(e.target.value)}
                                     placeholder="Please specify"
                                     className="input-text mt-2 p-2 border rounded-md border-gray-300 focus:outline-none focus:border-blue-500"
@@ -149,7 +186,7 @@ const Form = () => {
                                 </div>
                             )}
                         </div>
-                    ))}
+                    )} )}
                 </div>
             </div>
 
@@ -159,11 +196,11 @@ const Form = () => {
                     2. What is their favorite movie/series genre?
                 </Heading>
                 <div className="flex flex-col gap-4 mt-4">
-                    {["Animated", "Action & Adventure", "Drama", "Comedy", "Other"].map((genre, index) => (
+                    {genere.map((genre, index) => (
                         <div key={index}>
                             <UserProfile2
                                 userAnimatedText={genre}
-                                isChecked={favoriteGenre === genre}
+                                isChecked={favoriteGenre === genre || (genre === 'Other' && !genere.includes(favoriteGenre))}
                                 onChange={() => {
                                     if (genre === 'Other') {
                                         setFavoriteGenre(genre);
@@ -174,7 +211,7 @@ const Form = () => {
                                 }}
                                 isForm={true} // Add isForm prop
                             />
-                            {genre === 'Other' && favoriteGenre === 'Other' && (
+                            {genre === 'Other' &&  (!genere.includes(favoriteGenre) || favoriteGenre === 'Other') && (
                                 <div className="undefined mt-4 border-2 border-gray-300 flex items-center gap-5 px-[18px] py-4 bg-white-a700 flex-1 rounded-[18px] cursor-pointer">
 
                                 <input
@@ -200,11 +237,11 @@ const Form = () => {
                     3. How do they like to spend time during weekends?
                 </Heading>
                 <div className="flex flex-col gap-4 mt-4">
-                    {["Outdoor activities and sports", "Arts and crafts", "Indoor games and activities", "Movies and TV series", "Other"].map((activity, index) => (
+                    {vocationActivity.map((activity, index) => (
                         <div key={index}>
                             <UserProfile2
                                 userAnimatedText={activity}
-                                isChecked={weekendActivity === activity}
+                                isChecked={weekendActivity === activity || (activity === 'Other' && !vocationActivity.includes(weekendActivity))}
                                 onChange={() => {
                                     if (activity === 'Other') {
                                         setWeekendActivity(activity);
@@ -215,7 +252,7 @@ const Form = () => {
                                 }}
                                 isForm={true} // Add isForm prop
                             />
-                            {activity === 'Other' && weekendActivity === 'Other' && (
+                            {activity === 'Other' && (!vocationActivity.includes(weekendActivity) || weekendActivity === 'Other' ) && (
                                 <div className="undefined mt-4 border-2 border-gray-300 flex items-center gap-5 px-[18px] py-4 bg-white-a700 flex-1 rounded-[18px] cursor-pointer">
 
                                 <input
@@ -238,11 +275,11 @@ const Form = () => {
                     4. What type of books do they like to read?
                 </Heading>
                 <div className="flex flex-col gap-4 mt-4">
-                    {["Fantasy books", "Science Fiction books", "Thriller and adventure books", "Educational and non-fiction books", "Other"].map((book, index) => (
+                    {BooksArray.map((book, index) => (
                         <div key={index}>
                             <UserProfile2
                                 userAnimatedText={book}
-                                isChecked={bookType === book}
+                                isChecked={bookType === book || (book === 'Other' && !BooksArray.includes(bookType))}
                                 onChange={() => {
                                     if (book === 'Other') {
                                         setBookType(book);
@@ -253,7 +290,7 @@ const Form = () => {
                                 }}
                                 isForm={true} // Add isForm prop
                             />
-                            {book === 'Other' && bookType === 'Other' && (
+                            {book === 'Other' && (!BooksArray.includes(bookType) || bookType === 'Other')&& (
                                 <div className="undefined mt-4 border-2 border-gray-300 flex items-center gap-5 px-[18px] py-4 bg-white-a700 flex-1 rounded-[18px] cursor-pointer">
 
                                 <input

@@ -1,7 +1,9 @@
 import { Button, Heading, Img, TextArea, Text } from "../../components";
 import React from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function DesktoponeRowFour() {
+    const navigate = useNavigate();
     return (
         <div className="mt-[98px] flex justify-center self-stretch">
             <div className="container-xs flex justify-center px-14 md:px-5">
@@ -47,7 +49,9 @@ export default function DesktoponeRowFour() {
                             </div>
                         </div>
                     </div>
-                    <Button color="black_900" size="5xl" shape="round" className="mt-20 min-w-[332px] font-semibold">
+                    <Button  onClick={()=>{
+                        navigate('/login');
+                    }}  color="black_900" size="5xl" shape="round" className="mt-20 min-w-[332px] font-semibold">
                         Try Gift Flow Today
                     </Button>
                 </div>

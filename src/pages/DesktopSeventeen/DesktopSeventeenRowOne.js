@@ -1,6 +1,6 @@
 import { Button, Img, Heading, Text } from "../../components";
 import UserProfile from "../../components/UserProfile1";
-import React, { Suspense } from "react";
+import React, {Suspense, useEffect} from "react";
 import {useChild} from "../../context/ChildContext";
 
 /*const data = [
@@ -12,6 +12,9 @@ import {useChild} from "../../context/ChildContext";
 
 export default function DesktopSeventeenRowOne({navigate}) {
     const { childrenData, addChild, updateChild, deleteChild, selectChild, selectedChildId } = useChild();
+
+
+
 
 
     return (
@@ -51,13 +54,13 @@ export default function DesktopSeventeenRowOne({navigate}) {
                                         <UserProfile
                                             selected={selectedChildId?.id === d?.id}
                                             onClick={()=>{selectChild(d)}} {...d} obj={d} key={"desktop" + index}
-                                                      className={`w-[24%] md:w-full   ${color}`} />
+                                                      className={`w-[24%] md:w-full cursor-pointer   ${color}`} />
                                     )})}
 
                                     <div    onClick={()=>{
                                         navigate('/addChild');
                                     }}
-                                            className="flex w-[24%] flex-col gap-6 md:w-full">
+                                            className="flex w-[24%] flex-col gap-6 md:w-full cursor-pointer">
 
                                         <div  style={{    height: '100%'}}
                                             className="flex flex-col items-center place-items-center justify-center gap-[22px] rounded-[26px]

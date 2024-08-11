@@ -14,6 +14,14 @@ export default function UserProfile1({
     if(selected){
         textColor = '!text-white-a700'
     }
+    let picture = 'images/img_ellipse_4_138x138.png' ;
+    if(obj?.picture  ){
+        picture = obj?.picture;
+    }else if(obj?.gender === 'male' ){
+        picture = 'images/img_ellipse_4_138x138.png';
+    }else {
+        picture = 'images/img_image_1.png';
+    }
 
     return (
         <div
@@ -22,7 +30,7 @@ export default function UserProfile1({
         >
             <div className="relative h-[138px] w-[68%]">
                 <Img
-                    src={obj?.picture}
+                    src={picture}
                     alt="Mikefourteen"
                     className="absolute bottom-0 left-0 right-0 top-0 m-auto h-[138px] w-full rounded-[68px] object-cover"
                 />

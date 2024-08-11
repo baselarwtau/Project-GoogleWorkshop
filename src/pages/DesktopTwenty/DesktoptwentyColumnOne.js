@@ -1,14 +1,19 @@
 import React, { useState } from "react";
-import { Button, TextArea, Heading, Input, Img } from "../../components";
+import { Button, TextArea, Heading, Input } from "../../components";
 import UserProfile2 from "../../components/UserProfile2";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../firebase/firebase";
+import ImageUploader from "../../components/imageUploader";
+import { useNavigate } from "react-router-dom";
 import { useChild } from "../../context/ChildContext";
-import {useNavigate} from "react-router-dom"; // Ensure your Firebase config is correctly imported
+
+const games = ["Video Games", "Board Games", "Puzzles", "Sports", ];
+const genres = ["Animated", "Action & Adventure", "Drama", "Comedy", ];
+const vocationActivities = ["Outdoor activities and sports", "Arts and crafts", "Indoor games and activities", "Movies and TV series",];
+const booksArray = ["Fantasy books", "Science Fiction books", "Thriller and adventure books", "Educational and non-fiction books",];
 
 export default function DesktoptwentyColumnOne() {
-    const { childrenData, addChild, updateChild, deleteChild, loading } = useChild();
-    const navigate = useNavigate();  // React Router's useNavigate hook for navigation
+    const { addChild } = useChild();
+    const navigate = useNavigate();
+    const userInfo = JSON.parse(localStorage.getItem('user-info'));
 
     const [formData, setFormData] = useState({
         childName: "",
@@ -19,10 +24,20 @@ export default function DesktoptwentyColumnOne() {
         weekendActivities: "",
         bookType: "",
         additionalDetails: "",
-        gender: "",  // New state for gender
+        gender: "",
+        gamesInterestOther: "",
+        movieGenreOther: "",
+        weekendActivitiesOther: "",
+        bookTypeOther: "",
     });
 
-    // Function to handle input changes
+    const [otherFields, setOtherFields] = useState({
+        gamesInterest: false,
+        movieGenre: false,
+        weekendActivities: false,
+        bookType: false,
+    });
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevState) => ({
@@ -31,15 +46,6 @@ export default function DesktoptwentyColumnOne() {
         }));
     };
 
-    // Function to handle radio button changes
-    const handleRadioChange = (name, value) => {
-        setFormData((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
-
-    // Function to handle textarea changes
     const handleTextAreaChange = (event) => {
         setFormData((prevState) => ({
             ...prevState,
@@ -47,86 +53,59 @@ export default function DesktoptwentyColumnOne() {
         }));
     };
 
-    // Function to handle image upload
-    const uploadImageAndGetURL = async (file) => {
-        if (!file) return null;
-
-        const storageRef = ref(storage, `images/${file.name}`);
-
-        try {
-            await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(storageRef);
-            return downloadURL;
-        } catch (error) {
-            console.error("Error uploading file:", error);
-            return null;
-        }
+    const handleRadioChange = (field, value) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            [field]: value === "Other" ? "" : value,
+        }));
+        setOtherFields((prevState) => ({
+            ...prevState,
+            [field]: value === "Other",
+        }));
     };
 
-    const handleImageUpload = async (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageURL = await uploadImageAndGetURL(file);
-            if (imageURL) {
-                setFormData((prevState) => ({
-                    ...prevState,
-                    picture: imageURL,
-                }));
-            }
-        }
+    const handleTextChange = (field, event) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            [`${field}Other`]: event.target.value,
+        }));
     };
 
-// Function to handle form submission
+    const onHandleImageUpload = (imageURL) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            picture: imageURL,
+        }));
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Format the form data into the desired structure
         const formattedData = {
             name: formData.childName,
-            gender: formData.gender.toLowerCase(), // Ensure gender is in lowercase
+            gender: formData.gender.toLowerCase(),
             dob: formData.dob,
             picture: formData.picture || "",
             questions: [
                 {
                     question: "What kinds of games does he like to play the most?",
-                    answer: formData.gamesInterest,
-                    options: [
-                        "Board games",
-                        "Outdoor games",
-                        "Technology games (such as game consoles or computer games)",
-                        "Puzzle building and challenge tests",
-                    ],
+                    answer: formData.gamesInterest || formData.gamesInterestOther,
+                    options: games,
                 },
                 {
                     question: "What are your child's favorite movies or series?",
-                    answer: formData.movieGenre,
-                    options: [
-                        "Animated movies",
-                        "Action series",
-                        "Dramas",
-                        "Comedies",
-                    ],
+                    answer: formData.movieGenre || formData.movieGenreOther,
+                    options: genres,
                 },
                 {
-                    question:
-                        "How does he like to spend time during vacations or on weekends?",
-                    answer: formData.weekendActivities,
-                    options: [
-                        "Outdoor activities like hiking or sports",
-                        "Arts and crafts",
-                        "Indoor games and activities",
-                        "Watching movies or TV series at home",
-                    ],
+                    question: "How does he like to spend time during vacations or on weekends?",
+                    answer: formData.weekendActivities || formData.weekendActivitiesOther,
+                    options: vocationActivities,
                 },
                 {
                     question: "What types of books does he like to read?",
-                    answer: formData.bookType,
-                    options: [
-                        "Fantasy",
-                        "Science fiction",
-                        "Thriller and adventure books",
-                        "Educational and mentoring books",
-                    ],
+                    answer: formData.bookType || formData.bookTypeOther,
+                    options: booksArray,
                 },
                 {
                     question: "Is there something important for us to know?",
@@ -138,9 +117,7 @@ export default function DesktoptwentyColumnOne() {
 
         console.log("Formatted Data:", formattedData);
 
-        // You can now send formattedData to your API or save it
         await addChild(formattedData);
-        // Navigate to another route
         navigate('/children');
     };
 
@@ -148,9 +125,6 @@ export default function DesktoptwentyColumnOne() {
         <div className="flex flex-col items-center self-stretch">
             <div className="container-xs flex flex-col items-center px-14 md:px-5">
                 <form onSubmit={handleSubmit} className="w-full">
-
-
-
                     <div className="flex items-start self-stretch md:flex-col">
                         <div className="mt-6 flex flex-1 gap-[34px] md:flex-col md:self-stretch">
                             <div className="flex w-[46%] flex-col items-start gap-2.5 md:w-full">
@@ -181,35 +155,7 @@ export default function DesktoptwentyColumnOne() {
                                 />
                             </div>
                         </div>
-                        <div className="flex w-[20%] flex-col items-end gap-4 self-center md:w-full">
-                            <label htmlFor="picture"
-                                   className="w-[150px] h-[150px] rounded-[80px] bg-black-900 p-[46px] md:w-full md:p-5 cursor-pointer">
-                                {formData.picture ? (
-                                    <img
-                                        src={formData.picture}
-                                        alt="Child"
-                                        className="h-[66px] w-[66px] object-cover rounded-full"
-                                    />
-                                ) : (
-                                    <Img
-                                        src="images/material-symbols_person-add.svg"
-                                        alt="Add Picture"
-                                        className="h-[66px] w-[66px]"
-                                    />
-                                )}
-                            </label>
-                            <input
-                                type="file"
-                                id="picture"
-                                name="picture"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                className="hidden"
-                            />
-                            <Heading size="headings" as="h4" className="mr-[22px] md:mr-0">
-                                Add Picture
-                            </Heading>
-                        </div>
+                        <ImageUploader onImageUpload={onHandleImageUpload} />
                     </div>
 
                     {/* New Gender Question */}
@@ -230,81 +176,48 @@ export default function DesktoptwentyColumnOne() {
                         </div>
                     </div>
 
-                    <div className="form-section mt-[34px]">
-                        <Heading size="headingxs" as="h3" className="!text-gray-800">
-                            1. What kind of games interests them?
-                        </Heading>
-                        <div className="flex flex-col gap-4 mt-4">
-                            {["Board Games", "Outdoor Games", "Video Games", "Puzzles & Strategic Thinking Games"].map(
-                                (game, index) => (
-                                    <UserProfile2
-                                        key={index}
-                                        userAnimatedText={game}
-                                        isChecked={formData.gamesInterest === game}
-                                        onChange={() => handleRadioChange("gamesInterest", game)}
-                                        isForm={true}
-                                    />
-                                )
-                            )}
-                        </div>
-                    </div>
+                    {/* Questions with "Other" Option */}
+                    {[
+                        { field: "gamesInterest", label: "What kind of games interests them?", options: games },
+                        { field: "movieGenre", label: "What is their favorite movie/series genre?", options: genres },
+                        { field: "weekendActivities", label: "What do they like to do on weekends?", options: vocationActivities },
+                        { field: "bookType", label: "What type of books do they enjoy?", options: booksArray }
+                    ].map(({ field, label, options }, idx) => (
+                        <div key={idx} className="form-section mt-[34px]">
 
-                    <div className="form-section mt-[34px]">
-                        <Heading size="headingxs" as="h3" className="!text-gray-800">
-                            2. What is their favorite movie/series genre?
-                        </Heading>
-                        <div className="flex flex-col gap-4 mt-4">
-                            {["Animated", "Action & Adventure", "Drama", "Comedy"].map(
-                                (genre, index) => (
+                            <Heading size="headingxs" as="h3" className="!text-gray-800">
+                                {label}
+                            </Heading>
+                            <div className="flex flex-col gap-4 mt-4">
+                                {options.map((option, index) => (
                                     <UserProfile2
                                         key={index}
-                                        userAnimatedText={genre}
-                                        isChecked={formData.movieGenre === genre}
-                                        onChange={() => handleRadioChange("movieGenre", genre)}
+                                        userAnimatedText={option}
+                                        isChecked={formData[field] === option}
+                                        onChange={() => handleRadioChange(field, option)}
                                         isForm={true}
                                     />
-                                )
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="form-section mt-[34px]">
-                        <Heading size="headingxs" as="h3" className="!text-gray-800">
-                            3. What do they like to do on weekends?
-                        </Heading>
-                        <div className="flex flex-col gap-4 mt-4">
-                            {["Park Visits & Picnics", "Watching Movies", "Arts and Crafts", "Reading Books"].map(
-                                (activity, index) => (
-                                    <UserProfile2
-                                        key={index}
-                                        userAnimatedText={activity}
-                                        isChecked={formData.weekendActivities === activity}
-                                        onChange={() => handleRadioChange("weekendActivities", activity)}
-                                        isForm={true}
+                                ))}
+                                <UserProfile2
+                                    key="other"
+                                    userAnimatedText="Other"
+                                    isChecked={otherFields[field]}
+                                    onChange={() => handleRadioChange(field, "Other")}
+                                    isForm={true}
+                                />
+                                {otherFields[field] && (
+                                    <Input
+                                        type="text"
+                                        name={`${field}Other`}
+                                        value={formData[`${field}Other`]}
+                                        onChange={(e) => handleTextChange(field, e)}
+                                        placeholder="Please specify"
+                                        className="self-stretch mt-2"
                                     />
-                                )
-                            )}
+                                )}
+                            </div>
                         </div>
-                    </div>
-
-                    <div className="form-section mt-[34px]">
-                        <Heading size="headingxs" as="h3" className="!text-gray-800">
-                            4. What type of books do they enjoy?
-                        </Heading>
-                        <div className="flex flex-col gap-4 mt-4">
-                            {["Story Book", "Comic Book", "Educational Book", "Adventure Book"].map(
-                                (bookType, index) => (
-                                    <UserProfile2
-                                        key={index}
-                                        userAnimatedText={bookType}
-                                        isChecked={formData.bookType === bookType}
-                                        onChange={() => handleRadioChange("bookType", bookType)}
-                                        isForm={true}
-                                    />
-                                )
-                            )}
-                        </div>
-                    </div>
+                    ))}
 
                     <div className="mt-[34px] flex flex-col items-start gap-[26px]">
                         <Heading size="heading5xl" as="h4">
@@ -334,7 +247,14 @@ export default function DesktoptwentyColumnOne() {
                             size="4xl"
                             shape="round"
                             className="min-w-[142px] border border-solid border-black-900 font-bold ml-10"
-                            onClick={() => console.log("Cancel button clicked")}
+                            onClick={() => {
+                                console.log("Cancel button clicked");
+                                if (userInfo?.uid) {
+                                    navigate('/children?giftadded=1');
+                                } else {
+                                    navigate('/home');
+                                }
+                            }}
                         >
                             Cancel
                         </Button>

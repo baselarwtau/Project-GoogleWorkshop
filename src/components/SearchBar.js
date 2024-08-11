@@ -30,9 +30,13 @@ const SearchBar = ({
                         className="block  min-w-[222px] h-[66px] px-4 py-2  border-gray-3000 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Price Range</option>
-                        <option value="low">Low</option>
+                        <option value="50"> Less then $50 </option>
+                        <option value="100"> Between $50 and $100 </option>
+                        <option value="150"> Between $100 and $150 </option>
+                        <option value="151"> $150+ </option>
+                      {/*  <option value="low">Low</option>
                         <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                        <option value="high">High</option>*/}
                     </select>
                 </div>
 
@@ -73,9 +77,13 @@ const SearchBar = ({
                         className="block  min-w-[222px] h-[66px] px-4 py-2  border-gray-3000 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Price Range</option>
-                        <option value="low">Low</option>
+                        <option value="50"> Less then $50</option>
+                        <option value="100"> Less then $100</option>
+                        <option value="150"> Less then $150</option>
+                        <option value="151"> $150+</option>
+                        {/*   <option value="low">Low</option>
                         <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                        <option value="high">High</option>*/}
                     </select>
                 </div>
 
@@ -124,7 +132,7 @@ const SearchBar = ({
                     onClick={() => {
                         navigate('/addGifts');
                     }}
-                    className="px-6 py-2 min-w-[229px] h-[66px] text-white bg-yellow-400 ml-auto rounded hover:bg-yellow-300 focus:outline-none">
+                    className="font-bold text-black-900 px-6 py-2 min-w-[290px] h-[66px] text-white bg-amber-200 ml-auto rounded-[14px] hover:bg-yellow-300 focus:outline-none">
                     + Add Gift
                 </button>
             </div>

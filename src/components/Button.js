@@ -39,10 +39,12 @@ const Button = ({
                     variant = "fill",
                     size = "sm",
                     color = "amber_200",
+    onPress,
                     ...restProps
                 }) => {
     return (
         <button
+            onClick={onPress}
             className={`flex flex-row items-center justify-center text-center cursor-pointer whitespace-nowrap ${className} ${
                 (shape && shapes[shape]) || ""
             } ${(size && sizes[size]) || ""} ${

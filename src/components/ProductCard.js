@@ -2,21 +2,29 @@ import React from "react";
 import { Button, Img, Heading } from "./index";
 
 export default function ProductCard({
-                                        productImage = "images/img_rectangle_17.png",
+                                        productImage = "images/giftmatch.png",
                                         productName = "Green Dinosaur Fluffy Toy - Collectible",
                                         productPrice = "$12.99",
                                         saveButton = "Saved",
                                         isChildGifts= false,
                                         ToggleLIke,
                                         isLiked,
+                                        isSuggestion= false,
+
 
 
                                         ...props
                                     }) {
+
+
+
+
+
+
     return (
         <div {...props} className={`flex flex-col w-full gap-4 bg-white-a700 shadow-xs rounded-[30px] ${props.className}`}>
             <Img
-                src={productImage}
+                src={productImage? productImage : "images/giftmatch.png"}
                 alt="Product Image"
                 className="h-[236px] w-full rounded-[30px] object-cover"
             />
@@ -34,7 +42,7 @@ export default function ProductCard({
                     shape="round"
                     rightIcon={
                       isChildGifts? <Img
-                          src={isLiked? "images/red-heart-icon.svg" :  "images/img_mdiheart.svg"}
+                          src={isLiked? "images/red-heart-icon.svg" :  "images/ph_heart-bold.svg"}
                           alt="Mdi:heart"
                           className="h-[24px] w-[24px]"
                       /> :  <Img

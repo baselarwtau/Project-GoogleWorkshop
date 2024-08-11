@@ -60,11 +60,13 @@ export const ChildProvider = ({ children }) => {
     const childWithUserId = { ...child, userId: user.uid };
     console.log('childtoAdd', childWithUserId);
     const docRef = await addDoc(collection(firestore, 'children'), childWithUserId);
-
+    const newChildData = { id: docRef.id, ...childWithUserId };
     const newChildrenData = [...childrenData, { id: docRef.id, ...childWithUserId }];
     console.log('New Children Data', newChildrenData);
     setChildrenData(newChildrenData);
     saveChildrenDataToLocalStorage(newChildrenData);
+
+    setSelectedChildId(newChildData);
 
   };
 
