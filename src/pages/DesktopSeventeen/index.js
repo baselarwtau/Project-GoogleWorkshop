@@ -9,6 +9,7 @@ import React, {Suspense, useEffect, useState} from "react";
 import { TabPanel, Tabs } from "react-tabs";
 import Header from "../../components/Header";
 import {useNavigate} from "react-router-dom";
+import {useChild} from "../../context/ChildContext";
 
 
 const data = [
@@ -70,7 +71,7 @@ const dropDownOptions = [
 
 export default function DesktopSeventeenPage() {
     const [searchBarValue, setSearchBarValue] = useState("");
-
+    const {childrenData, addChild, updateChild, deleteChild, selectChild, selectedChildId} = useChild();
 
 
     const navigate = useNavigate();

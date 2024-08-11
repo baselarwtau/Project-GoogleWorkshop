@@ -49,6 +49,7 @@ const Button = ({
                 (variant && variants[variant]?.[color]) || ""
             }`}
             {...restProps}
+
         >
             {!!leftIcon && leftIcon}
             {children}

@@ -138,6 +138,7 @@ const Form = () => {
                                 isForm={true} // Add isForm prop
                             />
                             {game === 'Other' && gameInterest === 'Other' && (
+                                <div className="undefined mt-4 border-2 border-gray-300 flex items-center gap-5 px-[18px] py-4 bg-white-a700 flex-1 rounded-[18px] cursor-pointer">
                                 <input
                                     type="text"
                                     value={otherGameInterest}
@@ -145,6 +146,7 @@ const Form = () => {
                                     placeholder="Please specify"
                                     className="input-text mt-2 p-2 border rounded-md border-gray-300 focus:outline-none focus:border-blue-500"
                                 />
+                                </div>
                             )}
                         </div>
                     ))}
@@ -173,6 +175,8 @@ const Form = () => {
                                 isForm={true} // Add isForm prop
                             />
                             {genre === 'Other' && favoriteGenre === 'Other' && (
+                                <div className="undefined mt-4 border-2 border-gray-300 flex items-center gap-5 px-[18px] py-4 bg-white-a700 flex-1 rounded-[18px] cursor-pointer">
+
                                 <input
                                     type="text"
                                     value={otherFavoriteGenre}
@@ -180,11 +184,15 @@ const Form = () => {
                                     placeholder="Please specify"
                                     className="input-text mt-2 p-2 border rounded-md border-gray-300 focus:outline-none focus:border-blue-500"
                                 />
+                                </div>
                             )}
                         </div>
                     ))}
                 </div>
             </div>
+
+
+
 
             {/* Question 3 */}
             <div className="form-section">
@@ -208,6 +216,8 @@ const Form = () => {
                                 isForm={true} // Add isForm prop
                             />
                             {activity === 'Other' && weekendActivity === 'Other' && (
+                                <div className="undefined mt-4 border-2 border-gray-300 flex items-center gap-5 px-[18px] py-4 bg-white-a700 flex-1 rounded-[18px] cursor-pointer">
+
                                 <input
                                     type="text"
                                     value={otherWeekendActivity}
@@ -215,6 +225,7 @@ const Form = () => {
                                     placeholder="Please specify"
                                     className="input-text mt-2 p-2 border rounded-md border-gray-300 focus:outline-none focus:border-blue-500"
                                 />
+                                </div>
                             )}
                         </div>
                     ))}
@@ -243,6 +254,8 @@ const Form = () => {
                                 isForm={true} // Add isForm prop
                             />
                             {book === 'Other' && bookType === 'Other' && (
+                                <div className="undefined mt-4 border-2 border-gray-300 flex items-center gap-5 px-[18px] py-4 bg-white-a700 flex-1 rounded-[18px] cursor-pointer">
+
                                 <input
                                     type="text"
                                     value={otherBookType}
@@ -250,6 +263,7 @@ const Form = () => {
                                     placeholder="Please specify"
                                     className="input-text mt-2 p-2 border rounded-md border-gray-300 focus:outline-none focus:border-blue-500"
                                 />
+                                </div>
                             )}
                         </div>
                     ))}

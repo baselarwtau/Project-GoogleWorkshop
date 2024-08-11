@@ -1,4 +1,4 @@
-import { Button, Img, Heading } from "../../components";
+import { Button, Img, Heading, Text } from "../../components";
 import UserProfile from "../../components/UserProfile1";
 import React, { Suspense } from "react";
 import {useChild} from "../../context/ChildContext";
@@ -22,7 +22,12 @@ export default function DesktopSeventeenRowOne({navigate}) {
                         <Heading as="h1" className="self-center font-casaygon">
                             My Children
                         </Heading>
-                            <Button style={{height: 66}} size="2xl" shape="round" className="min-w-[290px] font-quicksand font-bold">
+                            <Button
+                                disabled={!selectedChildId?.id}
+                                onClick={()=>{
+                                    navigate('/invite');
+                                }}
+                                style={{height: 66}} size="2xl" shape="round" className="min-w-[290px] font-quicksand font-bold">
                                 Invite Friends
                             </Button>
 
@@ -32,12 +37,27 @@ export default function DesktopSeventeenRowOne({navigate}) {
                         <div className="flex flex-col items-end">
                             <div className="flex gap-[22px] self-stretch md:flex-col">
                                 <Suspense fallback={<div>Loading feed...</div>}>
-                                    {childrenData.map((d, index) => (
-                                        <UserProfile onClick={()=>{selectChild(d)}} {...d} obj={d} key={"desktop" + index}
-                                                     className="w-[24%] bg-black-900 md:w-full"/>
-                                    ))}
+                                    {childrenData.map((d, index) => {
+                                        let color = '';
+                                        let selected = false;
 
-                                    <div className="flex w-[24%] flex-col gap-6 md:w-full">
+
+                                        if(selectedChildId?.id === d?.id){
+                                            color = 'bg-black-900';
+                                            selected = true;
+                                        }
+
+                                        return (
+                                        <UserProfile
+                                            selected={selectedChildId?.id === d?.id}
+                                            onClick={()=>{selectChild(d)}} {...d} obj={d} key={"desktop" + index}
+                                                      className={`w-[24%] md:w-full   ${color}`} />
+                                    )})}
+
+                                    <div    onClick={()=>{
+                                        navigate('/addChild');
+                                    }}
+                                            className="flex w-[24%] flex-col gap-6 md:w-full">
 
                                         <div  style={{    height: '100%'}}
                                             className="flex flex-col items-center place-items-center justify-center gap-[22px] rounded-[26px]
@@ -46,13 +66,9 @@ export default function DesktopSeventeenRowOne({navigate}) {
                                                  src="images/img_fluent_person-b.svg"
                                                  alt="Fluent person" loading="lazy"/>
 
-                                            <Button
-                                                onClick={()=>{
-                                                    navigate('/addChild');
-                                                }}
-                                                size="2xl" shape="round" className="min-w-[228px] h-[66px] font-semibold">
+                                            <Text>
                                                 Add Child
-                                            </Button>
+                                            </Text>
                                         </div>
 
 

@@ -1,10 +1,10 @@
-import { Img, Button, Heading } from "../../components";
+import {Img, Button, Heading, Text} from "../../components";
 import React from "react";
 
 export default function DesktoponeRowfindthe() {
     return (
         <div className="absolute left-0 right-0 top-0 m-auto flex flex-1 items-center justify-center bg-amber-200_01 md:relative md:flex-col">
-            <div className="mb-[30px] flex w-[54%] flex-col items-start gap-[190px] self-end md:w-full md:gap-[142px] md:self-auto md:px-5 sm:gap-[95px]">
+            <div className="mb-[30px] flex w-[54%] flex-col items-start gap-[225px] self-end md:w-full md:gap-[142px] md:self-auto md:px-5 sm:gap-[95px]">
                 <Heading as="h1" className="w-[92%] leading-[68px] md:w-full">
                     Find the Perfect Gift for Every Child, Every Time
                 </Heading>

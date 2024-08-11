@@ -64,7 +64,7 @@ export default function DesktopelevenRowOne() {
                     localStorage.setItem('user-info', JSON.stringify(userInfo));
 
                     // Navigate to another route
-                    navigate('/seventeen');
+                    navigate('/children');
                 } else {  // Logic for registration
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
@@ -108,7 +108,7 @@ export default function DesktopelevenRowOne() {
             localStorage.setItem('user-info', JSON.stringify(userInfo));
 
             // Navigate to another route
-            navigate('/seventeen');
+            navigate('/children');
         } catch (error) {
             setError(error.message);
             console.error("Error during Google Sign-In:", error);

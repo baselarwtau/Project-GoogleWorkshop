@@ -2,22 +2,7 @@ import ProductProfile from "../../components/ProductProfile";
 import React, {Suspense, useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import productsData from '../../assets/products.json';
-import ProductCard from "../../components/ProductCard";
 
-const data = [
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" },
-    { productName: "Green Dinosaur Fluffy Toy - Collectible", productPrice: "$12.99", saveButtonText: "Save" }
-];
 
 export default function DesktoptenRowOne({ansers = {}}) {
 
@@ -77,24 +62,23 @@ export default function DesktoptenRowOne({ansers = {}}) {
     return (
         <div className="flex justify-center self-stretch">
             <div className="container-xs flex justify-center md:px-5">
-                <div className="grid w-full grid-cols-4 gap-[30px] gap-y-[30px] px-1.5 md:grid-cols-2 sm:grid-cols-1">
-                    <Suspense fallback={<div>Loading feed...</div>}>
-                        {products.map((product, index) => (
-                            <ProductCard
-                                productPrice={product.price}
-                                productName={product.name}
-                                productImage={product.image}
-                                productId={product.id}
+                    {isLoading ? (
+                        <div>A I is thinking. Please wait...</div>
+                    ) : (
+                        <div className="grid w-full grid-cols-4 gap-[30px] gap-y-[30px] px-1.5 md:grid-cols-2 sm:grid-cols-1">
 
-                                ToggleLIke = {async ()=>{
-                                    console.log(product)
-                                 //   await updateChildData(product, selectedChildId.id);
-                                }}
+                            {products.map((product, index) => (
+                                <ProductProfile
+                                    productPrice={product.price}
+                                    productName={product.name}
+                                    productImage={product.image}
+                                    productId={product.id}
 
-                            />
-                        ))}
-                    </Suspense>
-                </div>
+                                />
+                            ))}
+                        </div>
+                    )}
+
             </div>
         </div>
     );

@@ -4,11 +4,16 @@ import React from "react";
 import {Link, useNavigate} from "react-router-dom";
 
 export default function Header({...props}) {
+    const userInfo = JSON.parse(localStorage.getItem('user-info'));
+
+    console.log(userInfo);
+
+
     const navigate = useNavigate();
     return (
         <header
             {...props}
-            className={`${props.className} bg-white-a700 shadow-lg flex justify-center items-center py-[38px] px-[20px] sm:py-5`}
+            className={`${props.className} bg-white-a700 shadow-lg shadow-black-900 flex justify-center items-center py-[38px] px-[20px] sm:py-5`}
         >
             <div className="flex items-center w-full justify-between gap-5 md:flex-col self-stretch">
                 <Img
@@ -19,17 +24,17 @@ export default function Header({...props}) {
                 <div className="flex items-center gap-[22px] sm:flex-col">
                     <ul className="flex flex-wrap gap-[22px]">
                         <li>
-                            <a href="#">
+                            <Link to="/home">
                                 <Text as="p">Home</Text>
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a href="#">
+                            <Link to="/product">
                                 <Text as="p">Products</Text>
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <Link to="/seventeen">
+                            <Link to="/children">
                                 <Text as="p">My Children</Text>
                             </Link>
                         </li>
@@ -57,14 +62,12 @@ export default function Header({...props}) {
                     </Button>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Img
-                        src="images/img_ellipse_3.png"
-                        alt="Image"
-                        className="h-[54px] w-[54px] rounded-[26px] object-cover"
-                    />
-                    <Heading size="headings" as="h6" className="!font-quicksand">
+                   <div className="w-10 h-10 rounded-full bg-blue-500 justify-center" >
+                       <Text className="text-center text-white-a700 text-2xl">{ userInfo?.uid? userInfo?.email.charAt(0) : 'A'} </Text>
+                   </div>
+                  {/*  <Heading size="headings" as="h6" className="!font-quicksand">
                         Jessica
-                    </Heading>
+                    </Heading>*/}
                 </div>
             </div>
         </header>

@@ -5,6 +5,8 @@ export default function ProductProfile({
                                            productName = "Green Dinosaur Fluffy Toy - Collectible",
                                            productPrice = "$12.99",
                                            saveButtonText = "Save",
+                                            productImage="images/img_rectangle_17.png",
+
                                            ...props
                                        }) {
     return (
@@ -13,7 +15,7 @@ export default function ProductProfile({
             className={`flex flex-col items-center w-full bg-white-a700 shadow-xs rounded-[30px] ${props.className}`}
         >
             <Img
-                src="images/img_rectangle_17.png"
+                src={productImage}
                 alt="Product Image"
                 className="h-[236px] w-full rounded-[30px] object-cover"
             />
@@ -25,7 +27,7 @@ export default function ProductProfile({
                     {productPrice}
                 </Heading>
             </div>
-            <Button
+         {/*   <Button
                 shape="round"
                 rightIcon={
                     <Img
@@ -37,7 +39,7 @@ export default function ProductProfile({
                 className="mb-4 mr-4 min-w-[104px] gap-2 self-end font-quicksand"
             >
                 {saveButtonText}
-            </Button>
+            </Button>*/}
         </div>
     );
 }

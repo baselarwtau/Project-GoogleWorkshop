@@ -4,10 +4,16 @@ import React from "react";
 export default function UserProfile1({
                                          userName = "Mike • 14",
                                          userBirthday = "04/10",
-    obj,
+                                         obj,
+                                         selected,
 
                                          ...props
                                      }) {
+
+    let textColor = ''
+    if(selected){
+        textColor = '!text-white-a700'
+    }
 
     return (
         <div
@@ -22,10 +28,10 @@ export default function UserProfile1({
                 />
             </div>
             <div className="flex flex-col items-center">
-                <Heading size="heading4xl" as="h3" className="!font-semibold !text-white-a700">
+                <Heading size="heading4xl" as="h3" className={`!font-semibold ${textColor}`} >
                     {obj?.name}
                 </Heading>
-                <Heading size="heading6xl" as="h6" className="!font-semibold !text-white-a700">
+                <Heading size="heading6xl" as="h6" className={`!font-semibold ${textColor}`} >
                     {obj?.dob}
                 </Heading>
             </div>

@@ -141,7 +141,7 @@ export default function DesktoptwentyColumnOne() {
         // You can now send formattedData to your API or save it
         await addChild(formattedData);
         // Navigate to another route
-        navigate('/seventeen');
+        navigate('/children');
     };
 
     return (

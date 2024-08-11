@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
+import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import Form from './Form';
 import 'react-tabs/style/react-tabs.css'; // Import default styles for basic styling
 import '../styles/CustomTabs.css';
 import ChildrenBanner from './ChildrenBanner';
 import ProductCard from './ProductCard';
 import SearchBar from './SearchBar';
-import { Text } from './Text';
+import {Text} from './Text';
 import {Button} from "./Button";
-import { useChild } from '../context/ChildContext'; // Import custom styles
+import {useChild} from '../context/ChildContext'; // Import custom styles
 import productsData from '../assets/products.json';
 import axios from 'axios';
 import _ from 'lodash';
@@ -18,13 +18,16 @@ const CustomTabs = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isFinished, setIsFinished] = useState(false);
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [childCroducts, setChildProducts] = useState([]);
+    const [categoryFilter, setCatFilter] = useState([]);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  //  console.log('selectedIndex', selectedIndex);
+    //  console.log('selectedIndex', selectedIndex);
 
-    const { childrenData, addChild, updateChild, deleteChild, selectChild, selectedChildId } = useChild();
+    const {childrenData, addChild, updateChild, deleteChild, selectChild, selectedChildId} = useChild();
+
     const [children, setChildren] = useState(
         childrenData.map((child) => ({
             ...child,
@@ -45,7 +48,7 @@ const CustomTabs = () => {
         if (child) {
 
             // Check if productId exists in the gifts array
-            const index = child.gifts.indexOf(product);
+            const index = child?.gifts?.indexOf(product);
             console.log('exist or not', index);
 
             if (index === -1) {
@@ -54,38 +57,25 @@ const CustomTabs = () => {
                 child.gifts.push(product);
 
             } else {
-               // product.isLiked = false;
+                // product.isLiked = false;
                 // If productId exists, remove it
                 child.gifts.splice(index, 1);
             }
 
-           await updateChild(childId, child);
+            await updateChild(childId, child);
             selectChild(child);
 
             // Log the updated data
-            console.log(child);
+           // console.log(child);
         } else {
             console.log(`Child with ID ${childId} not found.`);
         }
     };
 
 
-const getChildProduct = () => {
 
-    const childgifts = selectedChildId?.gifts || [];
 
-    // Filter products based on the suggested IDs
-  //  console.log('childGifts', childgifts);
- /*   const childProducts = productsData.filter((product) =>
-        childgifts.includes(product.id)
-    );*/
-
-    setChildProducts(childgifts);
-
-    console.log('childPproduct gotted', childgifts);
-}
-
-  //  console.log('children', children);
+    //  console.log('children', children);
     // Memoize the extractAnswers function
     const extractAnswers = useCallback((data) => {
         const answers = {};
@@ -100,8 +90,6 @@ const getChildProduct = () => {
         return answers;
     }, []);
 
-
-
     const axiosOptions = useMemo(() => ({
         withCredentials: true,
         headers: {
@@ -113,7 +101,7 @@ const getChildProduct = () => {
 
     // Memoize answers calculation
     const answers = useMemo(() => extractAnswers(selectedChildId), [selectedChildId, extractAnswers]);
-   // console.log('Answer', answers);
+    // console.log('Answer', answers);
     // Debounced handleFinish function
     const debouncedHandleFinish = useRef(
         _.debounce(async (answers) => {
@@ -139,8 +127,15 @@ const getChildProduct = () => {
                     suggestedProductIds.includes(product.id.toString())
                 );
 
+                console.log('A.I Products', filteredProducts);
 
-
+                const cats = [];
+                for (let i = 0; i < filteredProducts?.length; i++) {
+                    for (let z = 0; z < filteredProducts[i]?.category?.length; i++) {
+                        cats.push(filteredProducts[i]?.category[z]);
+                    }
+                }
+                setCategories(cats);
 
                 setProducts(filteredProducts); // Update state with filtered products
             } catch (error) {
@@ -169,31 +164,141 @@ const getChildProduct = () => {
 
     console.log('products', products);
 
+    const getChildProduct = () => {
+
+        const childgifts = selectedChildId?.gifts || [];
+
+        // Filter products based on the suggested IDs
+        //  console.log('childGifts', childgifts);
+        /*   const childProducts = productsData.filter((product) =>
+               childgifts.includes(product.id)
+           );*/
+
+        const cats = [];
+        for (let i = 0; i < childgifts?.length; i++) {
+            for (let z = 0; z < childgifts[i]?.category?.length; i++) {
+                cats.push(childgifts[i]?.category[z]);
+            }
+        }
+        setCategories(cats);
+
+        setChildProducts(childgifts);
+
+        console.log('childPproduct gotted', childgifts);
+    }
+
     // Memoize onSelect handler
     const handleTabSelect = useCallback((index) => {
         setSelectedIndex(index);
+        if (index === 1) {
+            const cats = [];
+            for (let i = 0; i < childCroducts?.length; i++) {
+                for (let z = 0; z < childCroducts[i]?.category?.length; i++) {
+                    cats.push(childCroducts[i]?.category[z]);
+                }
+            }
+            setCategories(cats);
+            return;
+        }
+        if (index === 2) {
+            const cats = [];
+            for (let i = 0; i < products?.length; i++) {
+                for (let z = 0; z < products[i]?.category?.length; i++) {
+                    cats.push(products[i]?.category[z]);
+                }
+            }
+            console.log('catoooooooo')
+            setCategories(cats);
+        }
+        console.log('selected index', index);
     }, []);
+
+    const findProductsByCategory = (searchCategory, data) => {
+        return data.filter(product => product.category.includes(searchCategory));
+    };
+
+    const filterProductsByPrice = (priceCategory, dataProducts) => {
+        switch (priceCategory) {
+            case 'low':
+                return dataProducts
+                    .filter(product => parseFloat(product.price) < 20)
+                    .sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+            case 'medium':
+                return dataProducts.filter(product => parseFloat(product.price) >= 20 && parseFloat(product.price) <= 50);
+            case 'high':
+                return dataProducts
+                    .filter(product => parseFloat(product.price) > 50)
+                    .sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+            default:
+                return products;
+        }
+    };
+
 
     return (
         <Tabs selectedIndex={selectedIndex} onSelect={handleTabSelect}>
             <TabList className=" border  border-solid border-black-900 flex">
                 <Tab className="tab" selectedClassName="selected-tab">About</Tab>
-                <Tab className="tab" selectedClassName="selected-tab">Gift List 31</Tab>
+                <Tab className="tab" selectedClassName="selected-tab">Gift List {childCroducts?.length} </Tab>
                 <Tab className="tab" selectedClassName="selected-tab">Suggestions 💡</Tab>
                 <Tab className="tab" selectedClassName="selected-tab">Child will like</Tab>
             </TabList>
 
             <TabPanel>
-                <ChildrenBanner />
-                <Form />
+                <ChildrenBanner/>
+                <Form/>
             </TabPanel>
             <TabPanel>
-                <SearchBar child={selectedChildId} />
+                <SearchBar
+                    categories={categories}
+                    onFilterCategory={(e) => {
+                        const cat = e?.target?.value;
+                        if (!cat) {
+                            setCatFilter([]);
+                            return;
+                        }
+                        if (cat?.length < 1) {
+                            setCatFilter([]);
+                            return;
+                        }
+                        const products = findProductsByCategory(cat, childCroducts);
+                        setCatFilter(products);
+                    }}
+                    onFilterPrice={(e) => {
+                        const price = e?.target?.value;
+                        if (!price) {
+                            setCatFilter([]);
+                            return;
+                        }
+                        if (price?.length < 1) {
+                            setCatFilter([]);
+                            return;
+                        }
+                        const products = filterProductsByPrice(price, childCroducts);
+                        setCatFilter(products);
+                    }}
+                    onFilter={(e) => {
+                        const term = e?.target?.value;
+                        if (!term) {
+                            setCatFilter([]);
+                            return;
+                        }
+                        if (term?.length < 1) {
+                            setCatFilter([]);
+                            return;
+                        }
+                        const filteredProducts = childCroducts.filter(product =>
+                            product.name.toLowerCase().includes(term)
+                        );
+                        setCatFilter(filteredProducts);
+                    }}
+                    child={selectedChildId}
+                />
 
+                {childCroducts.length > 0 ? < div
+                        className="grid w-full grid-cols-4 gap-[30px] gap-y-[30px] px-1.5 md:grid-cols-2 sm:grid-cols-1">
 
-                {childCroducts.length > 0? < div className="grid w-full grid-cols-4 gap-[30px] gap-y-[30px] px-1.5 md:grid-cols-2 sm:grid-cols-1">
-
-                        {childCroducts.map((product) => (
+                        {(categoryFilter?.length > 0 ? categoryFilter : childCroducts).map((product) => (
                             <div key={product.id} className="p-6 rounded">
                                 <ProductCard
                                     productPrice={product.price}
@@ -201,9 +306,9 @@ const getChildProduct = () => {
                                     productImage={product.image}
                                     productId={product.id}
 
-                                    ToggleLIke = {async ()=>{
+                                    ToggleLIke={async () => {
                                         console.log(product)
-                                       await updateChildData(product, selectedChildId.id);
+                                        await updateChildData(product, selectedChildId.id);
                                     }}
 
                                 />
@@ -211,17 +316,18 @@ const getChildProduct = () => {
                         ))}
 
                     </div> :
-                <div className="mt-16 mb-16">
-                    <div className="ml-[300px] mr-[298px] flex flex-col gap-[82px] md:mx-0 md:gap-[61px] sm:gap-[41px]">
-                        <Text size="text5xl" as="p" className="text-center leading-[44px]">
-                            <>
-                                Your child's gift list is empty.
-                                <br/>
-                                <br/>
-                                Start by browsing gift suggestions or add a gift manually.
-                            </>
-                        </Text>
-                        <div className="mx-12 flex justify-center gap-[34px] md:mx-0">
+                    <div className="mt-16 mb-16">
+                        <div
+                            className="ml-[300px] mr-[298px] flex flex-col gap-[82px] md:mx-0 md:gap-[61px] sm:gap-[41px]">
+                            <Text size="text5xl" as="p" className="text-center leading-[44px]">
+                                <>
+                                    Your child's gift list is empty.
+                                    <br/>
+                                    <br/>
+                                    Start by browsing gift suggestions or add a gift manually.
+                                </>
+                            </Text>
+                            <div className="mx-12 flex justify-center gap-[34px] md:mx-0">
 
                                 <Button size="2xl" shape="round" className="min-w-[228px] h-[66px] font-semibold">
                                     + Add Gift
@@ -232,11 +338,11 @@ const getChildProduct = () => {
                                     Browse Suggestions
                                 </Button>
 
+                            </div>
                         </div>
+
+
                     </div>
-
-
-                </div>
 
 
                 }
@@ -244,32 +350,61 @@ const getChildProduct = () => {
 
             </TabPanel>
             <TabPanel>
-                <SearchBar isDeggestion={true}/>
+
+                <SearchBar isDeggestion={true}
+                           categories={categories}
+                           onFilterCategory={(e) => {
+                               const cat = e?.target?.value;
+                               if (!cat) {
+                                   setCatFilter([]);
+                                   return;
+                               }
+                               if (cat?.length < 1) {
+                                   setCatFilter([]);
+                                   return;
+                               }
+                               const prodcts = findProductsByCategory(cat, products);
+                               setCatFilter(prodcts);
+                           }}
+                           onFilterPrice={(e) => {
+                               const price = e?.target?.value;
+                               if (!price) {
+                                   setCatFilter([]);
+                                   return;
+                               }
+                               if (price?.length < 1) {
+                                   setCatFilter([]);
+                                   return;
+                               }
+                               const prodcts = filterProductsByPrice(price, products);
+                               setCatFilter(prodcts);
+                           }}
+                />
 
                 <div className="grid w-full grid-cols-4 gap-[30px] gap-y-[30px] px-1.5 md:grid-cols-2 sm:grid-cols-1">
-                    {products.map((product) => {
-                        const findProfuct = selectedChildId.gifts.indexOf(product);
-                        console.log('finded Product', findProfuct);
-                        if (findProfuct >= 0 ) {
+                    {(categoryFilter?.length > 0 ? categoryFilter : products).map((product) => {
+                        const findProfuct = selectedChildId?.gifts?.indexOf(product);
+                        if (findProfuct >= 0) {
                             product.isLiked = true;
                         }
                         return (
-                        <div key={product.id} className="p-6 rounded">
-                            <ProductCard
-                                productPrice={product.price}
-                                productName={product.name}
-                                productImage={product.image}
-                                productId={product.id}
-                                isChildGifts={true}
-                                isLiked={product.isLiked}
-                                ToggleLIke = { async ()=>{
-                                    console.log(product.id)
-                                   await updateChildData(product, selectedChildId.id);
-                                }}
+                            <div key={product.id} className="p-6 rounded">
+                                <ProductCard
+                                    productPrice={product.price}
+                                    productName={product.name}
+                                    productImage={product.image}
+                                    productId={product.id}
+                                    isChildGifts={true}
+                                    isLiked={product.isLiked}
+                                    ToggleLIke={async () => {
+                                        console.log(product.id)
+                                        await updateChildData(product, selectedChildId.id);
+                                    }}
 
-                            />
-                        </div>
-                    )})}
+                                />
+                            </div>
+                        )
+                    })}
                 </div>
 
 

@@ -20,31 +20,31 @@ export default function DesktoptwoRowOne() {
                             shape="round"
                             name="search"
                             placeholder="Search for a product..."
-                            className="w-[80%]"
+                            className="w-[100%]"
                         />
-                        <div className="flex gap-3.5 self-stretch sm:flex-col">
+                        <div className="flex  self-stretch sm:flex-col">
                             <SelectBox
                                 shape="round"
                                 indicator={
-                                    <Img src="images/img_ouitokenrange.svg" alt="Oui: token-range" className="h-[28px] w-[26px]" />
+                                    <Img src="images/img_ouitokenrange.svg" alt="Oui: token-range" className="h-[66px] w-[26px]" />
                                 }
                                 name="price"
                                 placeholder="Price Range"
                                 options={dropDownOptions}
-                                className="w-[40%] gap-4 sm:w-full"
+                                className="w-[40%] pl-0 sm:w-full rounded-[22px]"
                             />
                             <SelectBox
                                 shape="round"
                                 indicator={
-                                    <Img src="images/img_checkmark.svg" alt="Checkmark" className="h-[28px] w-[34px]" />
+                                    <Img src="images/oui_token-range.svg" alt="Checkmark" className="h-[66px] w-[34px]" />
                                 }
                                 name="checkmark"
                                 placeholder="Category"
                                 options={dropDownOptions}
-                                className="w-[40%] gap-4 sm:w-full"
+                                className="w-[40%] pl-0 sm:w-full rounded-[22px]"
                             />
                         </div>
-                        <Button size="xl" shape="round" className="min-w-[334px] font-medium">
+                        <Button size="xl" shape="round" className="min-w-[384px] font-medium">
                             Find the Perfect Gift
                         </Button>
                     </div>

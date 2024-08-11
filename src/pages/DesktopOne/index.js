@@ -19,7 +19,7 @@ export default function DesktopOnePage() {
             <div className="flex flex-col items-center">
                 <div className="relative h-[528px] self-stretch">
                     <DesktoponeRowfindthe />
-                    <Text size="textxl" as="p" className="absolute bottom-0 left-[4%] m-auto w-[52%] leading-[29px]">
+                    <Text size="textxl" as="p" className="absolute bottom-[27%]  left-[2%] m-auto w-[52%] leading-[29px]">
                         Discover the joy of perfect gifting with our expertly curated selection of children's gifts. Whether
                         it's for a birthday, holiday, or just because, we ensure every present is a delightful surprise,
                         tailored to your child's unique interests. Make every occasion memorable with gifts they'll

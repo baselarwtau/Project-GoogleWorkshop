@@ -4,15 +4,29 @@ import React from "react";
 import {Img} from "./Img";
 import {useNavigate} from "react-router-dom";
 
-const SearchBar = ( {isDeggestion=false, child }) => {
+const SearchBar = ({
+                       isDeggestion = false,
+                       child,
+                       categories,
+                       onFilterCategory,
+                       onFilterPrice,
+                       onFilter,
+                   }) => {
+
     const navigate = useNavigate();
-    if(isDeggestion){
+
+    const removeDuplicates = (array) => {
+        return [...new Set(array)];
+    };
+
+    if (isDeggestion) {
         return (
             <div className="flex items-center p-4">
                 {/* Price Range Dropdown */}
 
                 <div className="relative shadow-md rounded">
                     <select
+                        onChange={onFilterPrice}
                         className="block  min-w-[222px] h-[66px] px-4 py-2  border-gray-3000 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Price Range</option>
@@ -25,24 +39,37 @@ const SearchBar = ( {isDeggestion=false, child }) => {
                 {/* Category Dropdown */}
                 <div className="relative shadow-md rounded ml-3">
                     <select
+                        onChange={onFilterCategory}
                         className="block min-w-[222px] h-[66px] px-4 py-2  border-gray-3000 rounded-full bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Category</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="fashion">Fashion</option>
-                        <option value="books">Books</option>
+                        {categories && removeDuplicates(categories).map(cat => (
+                            <option key={cat} value={cat}>{cat}</option>
+                        ))}
+                        {!categories && (
+                            <>
+                                <option value="electronics">Electronics</option>
+                                <option value="fashion">Fashion</option>
+                                <option value="books">Books</option>
+                            </>
+                        )}
                     </select>
                 </div>
 
             </div>
         );
-    }else{
+    } else {
+
+        console.log(`--------------categories------------222-`)
+        console.log(categories)
+
         return (
             <div className="flex items-center p-4">
                 {/* Price Range Dropdown */}
 
                 <div className="relative shadow-md rounded">
                     <select
+                        onChange={onFilterPrice}
                         className="block  min-w-[222px] h-[66px] px-4 py-2  border-gray-3000 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Price Range</option>
@@ -55,12 +82,20 @@ const SearchBar = ( {isDeggestion=false, child }) => {
                 {/* Category Dropdown */}
                 <div className="relative shadow-md rounded ml-3">
                     <select
+                        onChange={onFilterCategory}
                         className="block min-w-[222px] h-[66px] px-4 py-2  border-gray-3000 rounded-full bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Category</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="fashion">Fashion</option>
-                        <option value="books">Books</option>
+                        {categories && removeDuplicates(categories).map(cat => (
+                            <option key={cat} value={cat}>{cat}</option>
+                        ))}
+                        {!categories && (
+                            <>
+                                <option value="electronics">Electronics</option>
+                                <option value="fashion">Fashion</option>
+                                <option value="books">Books</option>
+                            </>
+                        )}
                     </select>
                 </div>
 
@@ -69,6 +104,7 @@ const SearchBar = ( {isDeggestion=false, child }) => {
                     <input
                         type="text"
                         placeholder="Search for a product..."
+                        onChange={onFilter}
                         className="block   min-w-[496px] h-[66px] px-4 py-2 pl-8  border-gray-3000 rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button
