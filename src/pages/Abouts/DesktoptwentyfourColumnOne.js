@@ -3,10 +3,10 @@ import TeamMemberProfile from "../../components/TeamMemberProfile";
 import React, { Suspense } from "react";
 
 const data = [
-    { teamMemberName: "Team Member", teamMemberEmail: "hello@gmail.com" },
-    { teamMemberName: "Team Member", teamMemberEmail: "hello@gmail.com" },
-    { teamMemberName: "Team Member", teamMemberEmail: "hello@gmail.com" },
-    { teamMemberName: "Team Member", teamMemberEmail: "hello@gmail.com" }
+    { teamMemberName: "Basel Erw", teamMemberEmail: "BaselArw@gmail.com" , img: "images/Basel.jpg"},
+    { teamMemberName: "Ohad Elkayam", teamMemberEmail: "ohadelkayam@mail.tau.ac.il", img: "images/OhadElkayam.png"},
+    { teamMemberName: "Bayan Hijazi", teamMemberEmail: "bayanhijazi@mail.tau.ac.il", img:"images/BayanHijazi.png" },
+    { teamMemberName: "Ghaidaa Haj", teamMemberEmail: "gaidaahaj@mail.tau.ac.il", img: 'images/Gaidaa.jpg '}
 ];
 
 export default function DesktoptwentyfourColumnOne() {
@@ -24,8 +24,8 @@ export default function DesktoptwentyfourColumnOne() {
                 </div>
                 <div className="flex gap-8 md:flex-col">
                     <Suspense fallback={<div>Loading feed...</div>}>
-                        {data.map((d, index) => (
-                            <TeamMemberProfile {...d} key={"listteammember" + index} />
+                        {data.map((d, index ,img) => (
+                            <TeamMemberProfile {...d} key={"listteammember" + index} myurl = {d.img} />
                         ))}
                     </Suspense>
                 </div>

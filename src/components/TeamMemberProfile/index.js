@@ -4,13 +4,14 @@ import React from "react";
 export default function TeamMemberProfile({
                                               teamMemberName = "Team Member",
                                               teamMemberEmail = "hello@gmail.com",
+                                              myurl = "images/getAllByDisplayValue.jpg",
                                               ...props
                                           }) {
     return (
         <div {...props} className={`${props.className} flex flex-col w-[24%] md:w-full`}>
             <div className="flex flex-col items-center self-stretch">
                 <Img
-                    src="images/img_ellipse_4.png"
+                    src= {myurl} 
                     alt="Team Member"
                     className="relative z-[11] h-[136px] w-[136px] rounded-[68px] object-cover"
                 />
