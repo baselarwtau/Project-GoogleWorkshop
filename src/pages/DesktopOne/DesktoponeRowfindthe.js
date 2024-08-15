@@ -18,7 +18,7 @@ export default function DesktoponeRowfindthe() {
                     shape="round"
                     rightIcon={
                         <div className="flex h-[18px] w-[18px] items-center justify-center bg-black-900">
-                            <Img src="images/img_profile.svg" alt="Profile" className="h-[18px] w-[18px]" />
+                            {/* <Img src="images/img_profile.svg" alt="Profile" className="h-[18px] w-[18px]" /> */}
                         </div>
                     }
                     className="min-w-[246px] gap-2 font-quicksand"

@@ -113,10 +113,10 @@ export default function DesktoptwentytwoRow(
                                             </Text>
                                         </div>
                                         <Heading size="heading10xl" as="h1" className="mt-3.5">
-                                            {formatDateTime(invitation?.date, invitation?.time)}
+                                        {formatDateTime(invitation?.date, invitation?.time)}
                                         </Heading>
                                         <Heading size="heading6xl" as="h2" className="mt-[26px]">
-                                            {invitation?.location}
+                                        📍 Location: {invitation?.location}
                                         </Heading>
                                     </div>
                                 </div>

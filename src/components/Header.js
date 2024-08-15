@@ -118,7 +118,7 @@ export default function Header({...props}) {
                             alt="Streamline:ai-technology-spark-solid"
                             className="h-[18px] w-[18px]"
                         />
-                        <span>AI Assist</span>
+                        <span>AI Help Me</span>
                     </NavLink>
                 </div>
 

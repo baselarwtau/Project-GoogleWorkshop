@@ -23,9 +23,10 @@ const data = [
 
 const dropDownOptions = [
     {label: "Select", value: ""},
-    {value: "0-50", label: "Less then $50"},
-    {value: "51-100", label: "Between $50 and $100"},
-    {value: "101-150", label: "Between $100 and $150"},
+    {value: "0-50", label: "Less than 50$"},
+    {value: "51-100", label: "Between 50$ and 100$"},
+    {value: "101-150", label: "Between 100$ and 150$"},
+    {value: "151-10000", label: "More than 150$"},
 
 ];
 
